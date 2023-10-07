@@ -13,4 +13,8 @@ public:
 
 private:
     Ui::MainWindowClass ui;
+
+public slots:
+    void stepButtonClicked();
+    void completeButtonClicked();
 };
