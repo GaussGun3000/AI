@@ -4,6 +4,11 @@ void Node::applyAction(Action action)
 {
 }
 
+QVector<int> Node::getState() const
+{
+	return state;
+}
+
 Node::Node(QScopedPointer<Node>& node, Action action): parent(node.data())
 {
 	this->state = node->state;
@@ -12,7 +17,6 @@ Node::Node(QScopedPointer<Node>& node, Action action): parent(node.data())
 	this->cost = node->cost + 1;
 	this->depth = node->cost + 1;
 	this->applyAction(action);
-
 }
 
 Node::Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost):
