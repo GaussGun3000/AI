@@ -6,8 +6,8 @@ class Node
 {
 	QVector<int> state;
 	QScopedPointer<Node> parent;
-	enum class Action {Up = 1, Right, Down, Left};
-	enum class Cell {UpLeft = 0, UpCenter, UpRight, MidLeft, Center, MidRight, BottomLeft, BottomCenter, BottomRight}; 
+	enum class Action {MoveUp = 1, MoveRight, MoveDown, MoveLeft};
+	enum class Cell {UpLeft = 0, UpCenter, UpRight, MidLeft, Center, MidRight, BottomLeft, BottomCenter, BottomRight};
 	Action action;
 	int cost;
 	int depth;
@@ -19,4 +19,3 @@ public:
 	 QVector<int> getState() const;
 
 };
-
