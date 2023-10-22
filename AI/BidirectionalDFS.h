@@ -22,13 +22,15 @@ private:
 	QSet<Node> targerDirectionSet;
 	QSet<Node> startDirectionSet;
 	QScopedPointer<QMutex> nextStepPermission;
+	Node lastStartNode;
+	Node lastTargetNode;
 
 	uint32_t maxDepth;
 	void run() override;
 	void createNodeLayerStart();
-	void createNodeLayerEnd();
+	void createNodeLayerTarget();
 
 public:
-	DirectionalSearch(QMutex* nsp, uint32_t maxDepth);
+	DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 };
 
