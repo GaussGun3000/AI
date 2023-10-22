@@ -19,6 +19,10 @@ Node::Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int 
 	state(state), parent(parent.data()), action(action), depth(depth), cost(cost)
 {}
 
+Node::Node()
+{
+}
+
 void Node::applyAction(Action action)
 {
 	int zeroPos = this->state.indexOf(0);
@@ -65,4 +69,19 @@ void Node::applyAction(Action action)
 		break;
 	};
 	}
+}
+
+Node& Node::operator=(const Node& other)
+{
+	if (this != &other) // Проверка на самоприсваивание
+	{
+		state = other.state;
+		//if (other.parent) parent.reset(new Node(other.parent, Action::NoAction));
+		//else parent.reset();
+		parent.reset(other.parent.data());
+		action = other.action;
+		cost = other.cost;
+		depth = other.depth;
+	}
+	return *this;
 }

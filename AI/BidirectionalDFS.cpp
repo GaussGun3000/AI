@@ -22,6 +22,7 @@ DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int
 {
     QScopedPointer<Node> nullparent(nullptr);
     lastStartNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
+    lastTargetNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
     // connect(this, DirectionalSearch::updateStats, this->parent, )
 }
 

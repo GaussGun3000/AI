@@ -11,6 +11,8 @@ public:
 	enum class Cell { UpLeft = 0, UpCenter, UpRight, MidLeft, Center, MidRight, BottomLeft, BottomCenter, BottomRight };
 	Node(QScopedPointer<Node>& node, Action action);
 	Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost);
+	Node();
+	Node& operator=(const Node& other);
 
 private:
 	QVector<int> state;
