@@ -51,8 +51,10 @@
     <ClInclude Include="Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BidirectionalDFS.h">
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="BidirectionalDFS.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </QtMoc>
   </ItemGroup>
 </Project>

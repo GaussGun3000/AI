@@ -13,6 +13,13 @@ void DirectionalSearch::createNodeLayer()
 {
 }
 
-DirectionalSearch::DirectionalSearch(Node* ods, Node* tds, QMutex* odm, QMutex* tdm, int32_t maxDepth)
+DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth):
+    nextStepPermission(nsp), maxDepth(maxDepth)
 {
+    // connect(this, DirectionalSearch::updateStats, this->parent, )
+}
+
+BidirectionalDFS::BidirectionalDFS()
+{
+
 }

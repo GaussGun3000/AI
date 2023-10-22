@@ -6,23 +6,29 @@
 
 class BidirectionalDFS
 {
-	QScopedPointer<Node> start;
-	QScopedPointer<Node> target;
-	QSet<Node> startDirectionSet;
-	QSet<Node> targetDirectionSet;
+	// reduntant class. Remove later if proven completelt unnecessary
+public:
+	BidirectionalDFS();
 };
 
 class DirectionalSearch : public QThread
 {
-	QScopedPointer<Node> otherDirectionSet;
-	QScopedPointer<Node> thisDirectionSet;
-	QScopedPointer<QMutex> otherDirectionMutex;
-	QScopedPointer<QMutex> thisDirectionMutex;
-	int32_t maxDepth;
+	Q_OBJECT
+
+signals:
+	void updateStats(uint32_t depth);
+
+private:
+	QSet<Node> targerDirectionSet;
+	QSet<Node> startDirectionSet;
+	QScopedPointer<QMutex> nextStepPermission;
+
+	uint32_t maxDepth;
 	void run() override;
-	void createNodeLayer();
+	void createNodeLayerStart();
+	void createNodeLayerEnd();
 
 public:
-	DirectionalSearch(Node* ods, Node* tds, QMutex* odm, QMutex* tdm, int32_t maxDepth);
+	DirectionalSearch(QMutex* nsp, uint32_t maxDepth);
 };
 
