@@ -19,11 +19,12 @@ signals:
 	void updateStats(uint32_t depth);
 
 private:
-	QSet<Node> targerDirectionSet;
+	QSet<Node> targetDirectionSet;
 	QSet<Node> startDirectionSet;
 	QScopedPointer<QMutex> nextStepPermission;
 	Node lastStartNode;
 	Node lastTargetNode;
+	uint32_t resulting_depth = -1;
 
 	uint32_t maxDepth;
 	void run() override;

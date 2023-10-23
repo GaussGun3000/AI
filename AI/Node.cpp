@@ -15,6 +15,11 @@ QVector<int> Node::getState() const
 	return state;
 }
 
+uint32_t Node::getDepth() const
+{
+	return depth;
+}
+
 Node::Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost):
 	state(state), parent(parent.data()), action(action), depth(depth), cost(cost)
 {}
@@ -84,4 +89,9 @@ Node& Node::operator=(const Node& other)
 		depth = other.depth;
 	}
 	return *this;
+}
+
+QVector<Node::Action> Node::getAvailableActions() const
+{
+	return QVector<Action>();
 }
