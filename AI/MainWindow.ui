@@ -17,39 +17,34 @@
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
      <widget class="QWidget" name="statisticWidget" native="true">
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="2">
-        <widget class="QLabel" name="targetDirDepth">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Текущая глубина дерева</string>
+          <string>Текущая глубина дерева (с каждого из направлений)</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="startDirDepth">
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeType">
+          <enum>QSizePolicy::Minimum</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QLabel" name="depthLabel">
          <property name="text">
           <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Прямой алгоритм</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QLabel" name="label_1">
-         <property name="text">
-          <string>Обратный алгоритм</string>
          </property>
         </widget>
        </item>
@@ -142,6 +137,7 @@
   </connection>
  </connections>
  <slots>
+  <signal>updateStats()</signal>
   <slot>stepButtonClicked()</slot>
   <slot>completeButtonClicked()</slot>
   <slot>startButtonClicked()</slot>

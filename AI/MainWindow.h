@@ -21,5 +21,5 @@ public slots:
     void stepButtonClicked();
     void completeButtonClicked();
     void startButtonClicked();
-    void updateStats();
+    void updateStats(uint32_t depth);
 };
