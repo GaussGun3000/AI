@@ -1,6 +1,7 @@
 #pragma once
 #include <QVector>
 #include <qscopedpointer.h>
+#include <list>
 
 class Node
 {
@@ -14,7 +15,7 @@ public:
 	Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost);
 	Node();
 	Node& operator=(const Node& other);
-	QVector<Action> getAvailableActions() const;
+	std::list<int> getAvailableActions() const;
 
 private:
 	QVector<int> state;
@@ -22,7 +23,6 @@ private:
 	Action action;
 	uint32_t cost;
 	uint32_t depth;
-
 	void applyAction(Action action);
 
 
