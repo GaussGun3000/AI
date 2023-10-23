@@ -23,6 +23,21 @@ Node::Node()
 {
 }
 
+std::list<int> Node::getAvailableActions()
+{
+	int zeroPos = this->state.indexOf(0);
+	std::list<int> availableActions;
+	if (zeroPos > 2)
+		availableActions.push_back(1); // up
+	if (zeroPos % 3 != 0)
+		availableActions.push_back(2); // right
+	if (zeroPos < 6)
+		availableActions.push_back(3); // down
+	if (zeroPos % 3 != 2)
+		availableActions.push_back(4); // left
+	return availableActions;
+}
+
 void Node::applyAction(Action action)
 {
 	int zeroPos = this->state.indexOf(0);
@@ -35,7 +50,7 @@ void Node::applyAction(Action action)
 			this->state[zeroPos] = this->state[zeroPos - 3];
 			this->state[zeroPos - 3] = 0;
 		}
-		else {}; // мб добавить обработку ошибок? но по сути если алгоритм правильно работает они не должны появлвяться. и эти if тоже тогда не нужны
+		else {}
 		break;
 	};
 
