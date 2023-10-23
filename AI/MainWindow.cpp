@@ -4,7 +4,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     mutex.lock();
-    //ds.reset(new DirectionalSearch());
+    QVector<int> startState = {6, 0, 8, 5, 2, 1, 4, 3, 7};
+    QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
+    ds.reset(new DirectionalSearch(&mutex, 15, startState, targetState));
+    //connect
     ui.setupUi(this);
 }
 

@@ -26,6 +26,9 @@ Node::Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int 
 
 Node::Node()
 {
+	action = Node::Action::NoAction;
+	cost = 0;
+	depth = 0;
 }
 
 std::list<Node::Action> Node::getAvailableActions() const
