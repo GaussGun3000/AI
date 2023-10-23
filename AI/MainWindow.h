@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
+#include "BidirectionalDFS.h"
 
 class MainWindow : public QMainWindow
 {
@@ -13,6 +14,8 @@ public:
 
 private:
     Ui::MainWindowClass ui;
+    QScopedPointer<DirectionalSearch> ds;
+    QMutex mutex;
 
 public slots:
     void stepButtonClicked();

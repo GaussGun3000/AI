@@ -25,7 +25,7 @@ void DirectionalSearch::createNodeLayerStart()
     for (auto action : actions)
     {
         QScopedPointer<Node> parentNode(&lastStartNode);
-        auto node(new Node(parentNode, action));
+        Node* node = new Node(parentNode, action);
         if (targetDirectionSet.contains(*node))
         {
             auto tdNode = targetDirectionSet.find(*node);
@@ -46,7 +46,7 @@ void DirectionalSearch::createNodeLayerTarget()
     for (auto action : actions)
     {
         QScopedPointer<Node> parentNode(&lastTargetNode);
-        auto node(new Node(parentNode, action));
+        Node* node = new Node(parentNode, action);
         if (startDirectionSet.contains(*node))
         {
             auto tdNode = startDirectionSet.find(*node);
@@ -68,6 +68,11 @@ DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int
     lastStartNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
     lastTargetNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
     // connect(this, DirectionalSearch::updateStats, this->parent, )
+}
+
+void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
+{
+    this->maxDepth = maxDepth;
 }
 
 BidirectionalDFS::BidirectionalDFS()
