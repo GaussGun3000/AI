@@ -16,17 +16,52 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+     <widget class="QWidget" name="statisticWidget" native="true">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="2">
+        <widget class="QLabel" name="targetDirDepth">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Текущая глубина дерева</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="startDirDepth">
+         <property name="text">
+          <string>0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Прямой алгоритм</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_1">
+         <property name="text">
+          <string>Обратный алгоритм</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="startButton">
+      <property name="text">
+       <string>Старт</string>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
+     </widget>
     </item>
     <item>
      <widget class="QWidget" name="buttonWidget" native="true">
@@ -64,8 +99,8 @@
    <slot>stepButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>175</x>
-     <y>425</y>
+     <x>197</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
      <x>156</x>
@@ -80,8 +115,8 @@
    <slot>completeButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>410</x>
-     <y>422</y>
+     <x>581</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
      <x>327</x>
@@ -89,9 +124,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>startButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindowClass</receiver>
+   <slot>startButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>296</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>5</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>stepButtonClicked()</slot>
   <slot>completeButtonClicked()</slot>
+  <slot>startButtonClicked()</slot>
  </slots>
 </ui>

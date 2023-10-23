@@ -33,13 +33,13 @@ std::list<Node::Action> Node::getAvailableActions() const
 	int zeroPos = this->state.indexOf(0);
 	std::list<Node::Action> availableActions;
 	if (zeroPos > 2)
-		availableActions.push_back(Node::Action::MoveUp); // up
+		availableActions.push_back(Node::Action::MoveUp); 
 	if (zeroPos % 3 != 0)
-		availableActions.push_back(2); // right
+		availableActions.push_back(Node::Action::MoveRight); 
 	if (zeroPos < 6)
-		availableActions.push_back(3); // down
+		availableActions.push_back(Node::Action::MoveDown); 
 	if (zeroPos % 3 != 2)
-		availableActions.push_back(4); // left
+		availableActions.push_back(Node::Action::MoveLeft); 
 	return availableActions;
 }
 

@@ -20,4 +20,5 @@ private:
 public slots:
     void stepButtonClicked();
     void completeButtonClicked();
+    void startButtonClicked();
 };

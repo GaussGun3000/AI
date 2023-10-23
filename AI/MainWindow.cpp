@@ -22,3 +22,8 @@ void MainWindow::completeButtonClicked()
 {
     mutex.unlock();
 }
+
+void MainWindow::startButtonClicked()
+{
+    
+}

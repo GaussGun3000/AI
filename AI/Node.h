@@ -15,7 +15,7 @@ public:
 	Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost);
 	Node();
 	Node& operator=(const Node& other);
-	std::list<int> getAvailableActions() const;
+	std::list<Node::Action> getAvailableActions() const;
 
 private:
 	QVector<int> state;
@@ -24,6 +24,5 @@ private:
 	uint32_t cost;
 	uint32_t depth;
 	void applyAction(Action action);
-
 
 };
