@@ -3,6 +3,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    connect(&myThread, &DirectionalSearch::updateStats, this, &MainWindow::updateStats);
     mutex.lock();
     //ds.reset(new DirectionalSearch());
     ui.setupUi(this);
