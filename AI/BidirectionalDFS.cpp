@@ -20,7 +20,7 @@ void DirectionalSearch::run()
     uint32_t depth = 0;
     nextStepPermission->lock();
     nextStepPermission->unlock();
-    while (resulting_depth == -1 && depth <= maxDepth)
+    while (resultingDepth == -1 && depth <= maxDepth)
     {
         createNodeLayerStart();
         createNodeLayerTarget();
@@ -29,7 +29,7 @@ void DirectionalSearch::run()
         nextStepPermission->lock();
         nextStepPermission->unlock();       
     }
-    resulting_depth = resulting_depth;
+    resultingDepth = resultingDepth;
 }
 
 void DirectionalSearch::createNodeLayerStart()
@@ -42,7 +42,7 @@ void DirectionalSearch::createNodeLayerStart()
         if (targetDirectionSet.contains(node))
         {
             auto tdNode = targetDirectionSet.find(node);
-            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
+            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
@@ -62,7 +62,7 @@ void DirectionalSearch::createNodeLayerTarget()
         if (startDirectionSet.contains(node))
         {
             auto tdNode = startDirectionSet.find(node);
-            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
+            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
@@ -86,8 +86,12 @@ void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
     this->maxDepth = maxDepth;
 }
 
+uint32_t DirectionalSearch::getResultingDepth()
+{
+    return this->resultingDepth;
+}
+
 BidirectionalDFS::BidirectionalDFS()
 {
-
 }
 

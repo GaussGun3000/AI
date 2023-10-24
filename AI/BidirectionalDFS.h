@@ -26,7 +26,7 @@ private:
 	QList<QSharedPointer<Node>> nodes;
 	QSharedPointer<Node> lastStartNode;
 	QSharedPointer<Node> lastTargetNode;
-	uint32_t resulting_depth = -1;
+	uint32_t resultingDepth = -1;
 
 	uint32_t maxDepth;
 	void run() override;
@@ -36,6 +36,7 @@ private:
 public:
 	DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
+	uint32_t getResultingDepth();
 
 };
 

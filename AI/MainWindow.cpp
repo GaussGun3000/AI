@@ -11,10 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
     int maxDepth = 15;
     ds = new DirectionalSearch(&mutex, maxDepth, startState, targetState);
-    connect(ds, &DirectionalSearch::updateStats, this, &MainWindow::updateStats);
-    connect(ds, &DirectionalSearch::finished, this, &MainWindow::updateStats);
+    connect(ds, &DirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
+    connect(ds, &DirectionalSearch::finished, this, &MainWindow::updateFinishedStatLabels);
     ui.setupUi(this);
-    connect(ds.data(), &DirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
 }
 
 MainWindow::~MainWindow()
@@ -34,11 +33,23 @@ void MainWindow::completeButtonClicked()
 
 void MainWindow::startButtonClicked()
 {
+    ui.searchStatusLabel->setText("Поиск в процессе");
     ds->start();
+    update();
 }
 
 void MainWindow::updateStatLabels(uint32_t depth)
 {
     ui.depthLabel->setText(QString::number(depth));
+    update();
+}
+
+void MainWindow::updateFinishedStatLabels()
+{
+    uint32_t resDepth = ds->getResultingDepth();
+    if (resDepth == -1)
+        ui.searchStatusLabel->setText("Поиск завершен. Решение не найдено");
+    else
+        ui.searchStatusLabel->setText("Поиск завершен. Решение найдено");
     update();
 }
