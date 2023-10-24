@@ -1,4 +1,5 @@
 #include "BidirectionalDFS.h"
+#include <qdebug.h>
 
 inline uint qHash(const Node& node)
 { 
@@ -44,6 +45,7 @@ void DirectionalSearch::createNodeLayerStart()
     {
         Node* newNode = new Node(lastStartNode, action);
         QSharedPointer<Node> node(newNode);
+        qDebug() << targetDirectionSet;
         if (targetDirectionSet.contains(node))
         {
             auto tdNode = targetDirectionSet.find(node);
@@ -53,7 +55,7 @@ void DirectionalSearch::createNodeLayerStart()
         {
             if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
             startStack.push(node);
-            lastStartNode = node;
+           // lastStartNode = node;
             startDirectionSet.insert(node);
             nodes.append(node);
         }
@@ -79,6 +81,7 @@ void DirectionalSearch::createNodeLayerTarget()
         }
         else
         {
+            if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
             targetStack.push(node);
             lastTargetNode = node;
             targetDirectionSet.insert(node);
