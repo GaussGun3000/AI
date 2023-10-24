@@ -6,6 +6,7 @@ inline uint qHash(const Node& node)
     return qHash(node.getState());
 }
 
+/*
 inline uint qHash(const QSharedPointer<Node>& node)
 {
     return qHash(node->getState());
@@ -15,6 +16,18 @@ bool operator==(const QSharedPointer<Node>& left, const QSharedPointer<Node>& ri
 {
     return left->getState() == right->getState();
 }
+*/
+
+inline uint qHash(const NodePtr& wrapper)
+{
+    return qHash(wrapper.node->getState());
+}
+
+inline bool operator==(const NodePtr& left, const NodePtr& right)
+{
+    return left.node->getState() == right.node->getState();
+}
+
 
 void DirectionalSearch::run()
 {

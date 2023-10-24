@@ -13,6 +13,13 @@ public:
 	BidirectionalDFS();
 };
 
+class NodePtr {
+public:
+	explicit NodePtr(const QSharedPointer<Node>& node) : node(node) {}
+
+	QSharedPointer<Node> node;
+};
+
 class DirectionalSearch : public QThread
 {
 	Q_OBJECT
