@@ -8,8 +8,8 @@ MainWindow::MainWindow(QWidget *parent)
     auto action2 = action;
     mutex.lock();
     QVector<int> startState = { 6, 0, 8, 5, 2, 1, 4, 3, 7 };
-    //QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
-    QVector<int> targetState = { 6, 2, 8, 5, 0, 1, 4, 3, 7 };
+    QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
+    //QVector<int> targetState = { 6, 2, 8, 5, 3, 1, 4, 0, 7 };
     int maxDepth = 15;
     ds = new DirectionalSearch(&mutex, maxDepth, startState, targetState);
     connect(ds, &DirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
@@ -39,7 +39,7 @@ void MainWindow::startButtonClicked()
     update();
 }
 
-void MainWindow::updateStatLabels(uint32_t depth)
+void MainWindow::updateStatLabels(quint32 depth)
 {
     ui.depthLabel->setText(QString::number(depth));
     update();
@@ -52,5 +52,6 @@ void MainWindow::updateFinishedStatLabels()
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
     else
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
+    ui.depthLabel->setText(QString::number(ds->getResultingDepth()));
     update();
 }

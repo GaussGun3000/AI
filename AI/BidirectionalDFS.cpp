@@ -6,21 +6,20 @@ inline uint qHash(const Node& node)
     return qHash(node.getState());
 }
 
-/*
-inline uint qHash(const QSharedPointer<Node>& node)
+uint statehash(const QVector<int>& vector)
 {
-    return qHash(node->getState());
+    uint hashValue = 0;
+    uint base = 1;
+    for (int i = 0; i < vector.size(); ++i) {
+        hashValue += vector[i] * base;
+        base *= 9;
+    }
+    return hashValue;
 }
-
-bool operator==(const QSharedPointer<Node>& left, const QSharedPointer<Node>& right)
-{
-    return left->getState() == right->getState();
-}
-*/
 
 inline uint qHash(const NodePtr& wrapper)
 {
-    return qHash(wrapper.node->getState());
+    return statehash(wrapper.node->getState());
 }
 
 inline bool operator==(const NodePtr& left, const NodePtr& right)
@@ -42,7 +41,8 @@ void DirectionalSearch::run()
         nextStepPermission->lock();
         nextStepPermission->unlock();   
     }
-    resultingDepth = resultingDepth;
+    qDebug() << nodes.size();
+    nodes.clear();
 }
 
 void DirectionalSearch::createNodeLayerStart()
@@ -58,18 +58,18 @@ void DirectionalSearch::createNodeLayerStart()
     {
         Node* newNode = new Node(lastStartNode, action);
         QSharedPointer<Node> node(newNode);
-        qDebug() << targetDirectionSet;
-        if (targetDirectionSet.contains(node))
+        NodePtr nodeptr(node);
+        if (targetDirectionSet.contains(nodeptr))
         {
-            auto tdNode = targetDirectionSet.find(node);
-            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
+            auto tdNode = targetDirectionSet.find(nodeptr);
+            resultingDepth = node->getDepth() + tdNode->node->getDepth();
         }
         else
         {
             if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
             startStack.push(node);
            // lastStartNode = node;
-            startDirectionSet.insert(node);
+            startDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
     }
@@ -87,17 +87,18 @@ void DirectionalSearch::createNodeLayerTarget()
     for (auto action : actions)
     {
         QSharedPointer<Node> node(new Node(lastTargetNode, action));
-        if (startDirectionSet.contains(node))
+        NodePtr nodeptr(node);
+        if (startDirectionSet.contains(nodeptr))
         {
-            auto tdNode = startDirectionSet.find(node);
-            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
+            auto tdNode = startDirectionSet.find(nodeptr);
+            resultingDepth = node->getDepth() + tdNode->node->getDepth();
         }
         else
         {
             if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
             targetStack.push(node);
             lastTargetNode = node;
-            targetDirectionSet.insert(node);
+            targetDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
     }
@@ -109,8 +110,8 @@ DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int
     QSharedPointer<Node> nullparent(nullptr);
     lastStartNode = QSharedPointer<Node>::create(start, nullptr, Node::Action::NoAction, 0, 0);
     lastTargetNode = QSharedPointer<Node>::create(target, nullptr, Node::Action::NoAction, 0, 0);
-    startDirectionSet.insert(lastStartNode);
-    targetDirectionSet.insert(lastTargetNode);
+    startDirectionSet.insert(NodePtr(lastStartNode));
+    targetDirectionSet.insert(NodePtr(lastTargetNode));
     startStack.push(lastStartNode);
     targetStack.push(lastTargetNode);
 }
@@ -120,7 +121,7 @@ void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
     this->maxDepth = maxDepth;
 }
 
-uint32_t DirectionalSearch::getResultingDepth()
+int32_t DirectionalSearch::getResultingDepth()
 {
     return this->resultingDepth;
 }
