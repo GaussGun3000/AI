@@ -3,6 +3,7 @@
 #include <qset.h>
 #include <qthread.h>
 #include <qmutex.h>
+#include <qlist.h>
 
 class BidirectionalDFS
 {
@@ -16,14 +17,15 @@ class DirectionalSearch : public QThread
 	Q_OBJECT
 
 signals:
-	void updateStats(uint32_t depth);
+	void updateStats(const uint32_t depth);
 
 private:
-	QSet<Node> targetDirectionSet;
-	QSet<Node> startDirectionSet;
-	QScopedPointer<QMutex> nextStepPermission;
-	Node lastStartNode;
-	Node lastTargetNode;
+	QSet<QSharedPointer<Node>> targetDirectionSet;
+	QSet<QSharedPointer<Node>> startDirectionSet;
+	QMutex* nextStepPermission;
+	QList<QSharedPointer<Node>> nodes;
+	QSharedPointer<Node> lastStartNode;
+	QSharedPointer<Node> lastTargetNode;
 	uint32_t resulting_depth = -1;
 
 	uint32_t maxDepth;
