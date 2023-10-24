@@ -14,7 +14,7 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    QScopedPointer<DirectionalSearch> ds;
+    DirectionalSearch* ds;
     QMutex mutex;
 
 public slots:
@@ -22,6 +22,7 @@ public slots:
     void completeButtonClicked();
     void startButtonClicked();
     void updateStatLabels(uint32_t depth);
+    void updateFinishedStatLabels();
 
 signals:
     void updateStatsFromThread(uint32_t depth);

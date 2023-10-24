@@ -17,18 +17,18 @@ bool operator==(const QSharedPointer<Node>& left, const QSharedPointer<Node>& ri
 
 void DirectionalSearch::run()
 {
-    uint32_t depth = 0;
+    currentDepth = 0;
     nextStepPermission->lock();
     nextStepPermission->unlock();
-    while (resulting_depth == -1 && (!startStack.isEmpty() || !targetStack.isEmpty()))
+    while (resultingDepth == -1 && (!startStack.isEmpty() || !targetStack.isEmpty()))
     {
         createNodeLayerStart();
         createNodeLayerTarget();
-        emit updateStats(depth);
+        emit updateStats(currentDepth);
         nextStepPermission->lock();
-        nextStepPermission->unlock();       
+        nextStepPermission->unlock();   
     }
-    resulting_depth = resulting_depth;
+    resultingDepth = resultingDepth;
 }
 
 void DirectionalSearch::createNodeLayerStart()
@@ -47,10 +47,11 @@ void DirectionalSearch::createNodeLayerStart()
         if (targetDirectionSet.contains(node))
         {
             auto tdNode = targetDirectionSet.find(node);
-            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
+            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
+            if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
             startStack.push(node);
             lastStartNode = node;
             startDirectionSet.insert(node);
@@ -63,7 +64,7 @@ void DirectionalSearch::createNodeLayerTarget()
 {
     if (targetStack.isEmpty())
         return;
-    lastStartNode = startStack.pop();
+    lastTargetNode = targetStack.pop();
     if (lastTargetNode->getDepth() >= maxDepth)
         return;
 
@@ -74,10 +75,11 @@ void DirectionalSearch::createNodeLayerTarget()
         if (startDirectionSet.contains(node))
         {
             auto tdNode = startDirectionSet.find(node);
-            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
+            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
+            targetStack.push(node);
             lastTargetNode = node;
             targetDirectionSet.insert(node);
             nodes.append(node);
@@ -102,7 +104,12 @@ void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
     this->maxDepth = maxDepth;
 }
 
+uint32_t DirectionalSearch::getResultingDepth()
+{
+    return this->resultingDepth;
+}
+
 BidirectionalDFS::BidirectionalDFS()
 {
-
 }
+
