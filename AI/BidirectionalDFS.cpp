@@ -20,11 +20,10 @@ void DirectionalSearch::run()
     uint32_t depth = 0;
     nextStepPermission->lock();
     nextStepPermission->unlock();
-    while (resulting_depth == -1 && depth <= maxDepth)
+    while (resulting_depth == -1 && (!startStack.isEmpty() || !targetStack.isEmpty()))
     {
         createNodeLayerStart();
         createNodeLayerTarget();
-        depth++;
         emit updateStats(depth);
         nextStepPermission->lock();
         nextStepPermission->unlock();       
@@ -34,6 +33,12 @@ void DirectionalSearch::run()
 
 void DirectionalSearch::createNodeLayerStart()
 {
+    if (startStack.isEmpty())
+        return;
+    lastStartNode = startStack.pop();
+    if (lastStartNode->getDepth() >= maxDepth)
+        return;
+
     auto actions = lastStartNode -> getAvailableActions();
     for (auto action : actions)
     {
@@ -46,6 +51,7 @@ void DirectionalSearch::createNodeLayerStart()
         }
         else
         {
+            startStack.push(node);
             lastStartNode = node;
             startDirectionSet.insert(node);
             nodes.append(node);
@@ -55,6 +61,12 @@ void DirectionalSearch::createNodeLayerStart()
 
 void DirectionalSearch::createNodeLayerTarget()
 {
+    if (targetStack.isEmpty())
+        return;
+    lastStartNode = startStack.pop();
+    if (lastTargetNode->getDepth() >= maxDepth)
+        return;
+
     auto actions = lastTargetNode->getAvailableActions();
     for (auto action : actions)
     {
@@ -79,6 +91,10 @@ DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int
     QSharedPointer<Node> nullparent(nullptr);
     lastStartNode = QSharedPointer<Node>::create(start, nullptr, Node::Action::NoAction, 0, 0);
     lastTargetNode = QSharedPointer<Node>::create(target, nullptr, Node::Action::NoAction, 0, 0);
+    startDirectionSet.insert(lastStartNode);
+    targetDirectionSet.insert(lastTargetNode);
+    startStack.push(lastStartNode);
+    targetStack.push(lastTargetNode);
 }
 
 void DirectionalSearch::setMaxDepth(uint32_t maxDepth)

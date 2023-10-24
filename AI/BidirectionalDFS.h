@@ -4,6 +4,7 @@
 #include <qthread.h>
 #include <qmutex.h>
 #include <qlist.h>
+#include <qstack.h>
 
 class BidirectionalDFS
 {
@@ -26,7 +27,9 @@ private:
 	QList<QSharedPointer<Node>> nodes;
 	QSharedPointer<Node> lastStartNode;
 	QSharedPointer<Node> lastTargetNode;
-	uint32_t resulting_depth = -1;
+	QStack<QSharedPointer<Node>> startStack;
+	QStack<QSharedPointer<Node>> targetStack;
+	int32_t resulting_depth = -1;
 
 	uint32_t maxDepth;
 	void run() override;
