@@ -20,6 +20,21 @@ uint32_t Node::getDepth() const
 	return depth;
 }
 
+uint32_t Node::getCost() const
+{
+	return cost;
+}
+
+QSharedPointer<Node> Node::getParent() const
+{
+	return parent;
+}
+
+Node::Action Node::getAction() const
+{
+	return action;
+}
+
 Node::Node(QVector<int> state, Node* parent, Action action, int depth, int cost):
 	state(state), parent(parent), action(action), depth(depth), cost(cost)
 {}
@@ -40,10 +55,10 @@ Node::Node()
 	depth = 0;
 }
 
-std::list<Node::Action> Node::getAvailableActions() const
+QList<Node::Action> Node::getAvailableActions() const
 {
 	int zeroPos = this->state.indexOf(0);
-	std::list<Node::Action> availableActions;
+	QList<Node::Action> availableActions;
 	if (zeroPos > 2)
 		availableActions.push_back(Node::Action::MoveUp); 
 	if (zeroPos % 3 != 0)
@@ -53,6 +68,31 @@ std::list<Node::Action> Node::getAvailableActions() const
 	if (zeroPos % 3 != 2)
 		availableActions.push_back(Node::Action::MoveLeft); 
 	return availableActions;
+}
+
+void Node::setState(QVector<int> state)
+{
+	this->state = state;
+}
+
+void Node::setDepth(uint32_t depth)
+{
+	this->depth = depth;
+}
+
+void Node::setCost(uint32_t cost)
+{
+	this->cost = cost;
+}
+
+void Node::setParent(QSharedPointer<Node> parent)
+{
+	this->parent = parent;
+}
+
+void Node::setAction(Action action)
+{
+	this->action = action;
 }
 
 void Node::applyAction(Action action)

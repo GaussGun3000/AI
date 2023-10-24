@@ -50,23 +50,23 @@ void DirectionalSearch::createNodeLayerStart()
     if (startStack.isEmpty())
         return;
     lastStartNode = startStack.pop();
-    if (lastStartNode->getDepth() >= maxDepth)
+    if (lastStartNode.node->getDepth() >= maxDepth)
         return;
 
-    auto actions = lastStartNode -> getAvailableActions();
+    auto actions = lastStartNode.node -> getAvailableActions();
     for (auto action : actions)
     {
-        Node* newNode = new Node(lastStartNode, action);
-        QSharedPointer<Node> node(newNode);
+        NodePtrWrapper* newNode = new NodePtrWrapper(lastStartNode, action); //нет конструктора
+        NodePtrWrapper node(newNode);
         qDebug() << targetDirectionSet;
         if (targetDirectionSet.contains(node))
         {
             auto tdNode = targetDirectionSet.find(node);
-            resultingDepth = node->getDepth() + tdNode->data()->getDepth();
+            resultingDepth = node.node->getDepth() + tdNode->node.data()->getDepth();
         }
         else
         {
-            if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
+            if (node.node->getDepth() > currentDepth) currentDepth=node.node -> getDepth();
             startStack.push(node);
            // lastStartNode = node;
             startDirectionSet.insert(node);
@@ -80,10 +80,10 @@ void DirectionalSearch::createNodeLayerTarget()
     if (targetStack.isEmpty())
         return;
     lastTargetNode = targetStack.pop();
-    if (lastTargetNode->getDepth() >= maxDepth)
+    if (lastTargetNode.node->getDepth() >= maxDepth)
         return;
 
-    auto actions = lastTargetNode->getAvailableActions();
+    auto actions = lastTargetNode.node->getAvailableActions();
     for (auto action : actions)
     {
         QSharedPointer<Node> node(new Node(lastTargetNode, action));
@@ -120,7 +120,7 @@ void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
     this->maxDepth = maxDepth;
 }
 
-uint32_t DirectionalSearch::getResultingDepth()
+uint32_t DirectionalSearch::getResultingDepth() const
 {
     return this->resultingDepth;
 }
