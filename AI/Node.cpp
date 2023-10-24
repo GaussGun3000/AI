@@ -61,11 +61,11 @@ QList<Node::Action> Node::getAvailableActions() const
 	QList<Node::Action> availableActions;
 	if (zeroPos > 2)
 		availableActions.push_back(Node::Action::MoveUp); 
-	if (zeroPos % 3 != 0)
+	if (zeroPos % 3 != 2)
 		availableActions.push_back(Node::Action::MoveRight); 
 	if (zeroPos < 6)
 		availableActions.push_back(Node::Action::MoveDown); 
-	if (zeroPos % 3 != 2)
+	if (zeroPos % 3 != 0)
 		availableActions.push_back(Node::Action::MoveLeft); 
 	return availableActions;
 }

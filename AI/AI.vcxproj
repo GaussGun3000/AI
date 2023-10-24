@@ -85,7 +85,6 @@
   <ItemGroup>
     <ClCompile Include="BidirectionalDFS.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="NodePtrWrapper.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
     <QtMoc Include="MainWindow.h" />
@@ -93,7 +92,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NodePtrWrapper.h" />
     <QtMoc Include="BidirectionalDFS.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>
