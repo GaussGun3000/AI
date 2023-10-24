@@ -5,69 +5,80 @@ inline uint qHash(const Node& node)
     return qHash(node.getState());
 }
 
+inline uint qHash(const QSharedPointer<Node>& node)
+{
+    return qHash(node->getState());
+}
+
+bool operator==(const QSharedPointer<Node>& left, const QSharedPointer<Node>& right)
+{
+    return left->getState() == right->getState();
+}
+
 void DirectionalSearch::run()
 {
     uint32_t depth = 0;
+    nextStepPermission->lock();
+    nextStepPermission->unlock();
     while (resulting_depth == -1 && depth <= maxDepth)
     {
         createNodeLayerStart();
         createNodeLayerTarget();
         depth++;
-        updateStats(depth);
+        emit updateStats(depth);
         nextStepPermission->lock();
         nextStepPermission->unlock();       
     }
+    resulting_depth = resulting_depth;
 }
 
 void DirectionalSearch::createNodeLayerStart()
 {
-    auto actions = lastStartNode.getAvailableActions();
+    auto actions = lastStartNode -> getAvailableActions();
     for (auto action : actions)
     {
-        QScopedPointer<Node> parentNode(&lastStartNode);
-        Node* node = new Node(parentNode, action);
-        if (targetDirectionSet.contains(*node))
+        Node* newNode = new Node(lastStartNode, action);
+        QSharedPointer<Node> node(newNode);
+        if (targetDirectionSet.contains(node))
         {
-            auto tdNode = targetDirectionSet.find(*node);
-            resulting_depth = node->getDepth() + tdNode->getDepth();
+            auto tdNode = targetDirectionSet.find(node);
+            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
-            lastStartNode = *node;
-            startDirectionSet.insert(*node);
+            lastStartNode = node;
+            startDirectionSet.insert(node);
+            nodes.append(node);
         }
-        delete node;
     }
 }
 
 void DirectionalSearch::createNodeLayerTarget()
 {
-    auto actions = lastTargetNode.getAvailableActions();
+    auto actions = lastTargetNode->getAvailableActions();
     for (auto action : actions)
     {
-        QScopedPointer<Node> parentNode(&lastTargetNode);
-        Node* node = new Node(parentNode, action);
-        if (startDirectionSet.contains(*node))
+        QSharedPointer<Node> node(new Node(lastTargetNode, action));
+        if (startDirectionSet.contains(node))
         {
-            auto tdNode = startDirectionSet.find(*node);
-            resulting_depth = node->getDepth() + tdNode->getDepth();
+            auto tdNode = startDirectionSet.find(node);
+            resulting_depth = node->getDepth() + tdNode->data()->getDepth();
         }
         else
         {
-            lastTargetNode = *node;
-            targetDirectionSet.insert(*node);
+            lastTargetNode = node;
+            targetDirectionSet.insert(node);
+            nodes.append(node);
         }
-        delete node;
     }
 }
 
 DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target):
     nextStepPermission(nsp), maxDepth(maxDepth)
 {
-    QScopedPointer<Node> nullparent(nullptr);
-    lastStartNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
-    lastTargetNode = Node(start, nullparent, Node::Action::NoAction, 0, 0);
-    // connect(this, DirectionalSearch::updateStats, this->parent, )
+    QSharedPointer<Node> nullparent(nullptr);
+    lastStartNode = QSharedPointer<Node>::create(start, nullptr, Node::Action::NoAction, 0, 0);
+    lastTargetNode = QSharedPointer<Node>::create(target, nullptr, Node::Action::NoAction, 0, 0);
 }
 
 void DirectionalSearch::setMaxDepth(uint32_t maxDepth)

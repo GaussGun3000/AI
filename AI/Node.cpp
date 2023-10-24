@@ -1,9 +1,9 @@
 #include "Node.h"
 
-Node::Node(QScopedPointer<Node>& node, Action action): parent(node.data())
+Node::Node(QSharedPointer<Node>& node, Action action)
 {
 	this->state = node->state;
-	//this->parent = QScopedPointer<Node>(node.data());
+	this->parent = node;
 	this->action = action;
 	this->cost = node->cost + 1;
 	this->depth = node->cost + 1;
@@ -20,9 +20,18 @@ uint32_t Node::getDepth() const
 	return depth;
 }
 
-Node::Node(QVector<int> state, QScopedPointer<Node>& parent, Action action, int depth, int cost):
-	state(state), parent(parent.data()), action(action), depth(depth), cost(cost)
+Node::Node(QVector<int> state, Node* parent, Action action, int depth, int cost):
+	state(state), parent(parent), action(action), depth(depth), cost(cost)
 {}
+
+Node::Node(const Node & other)
+{
+	this->state = other.state;
+	this->parent = other.parent;
+	this->action = other.action;
+	this->cost = other.cost;
+	this->depth = other.depth;
+}
 
 Node::Node()
 {
@@ -107,5 +116,9 @@ Node& Node::operator=(const Node& other)
 		depth = other.depth;
 	}
 	return *this;
+}
+
+bool Node::operator==(const Node& other) const{
+	return this->getState() == other.getState();
 }
 
