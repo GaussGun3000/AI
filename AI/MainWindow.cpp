@@ -33,7 +33,7 @@ void MainWindow::completeButtonClicked()
 
 void MainWindow::startButtonClicked()
 {
-    ui.searchStatusLabel->setText("Поиск в процессе");
+    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
     ds->start();
     update();
 }
@@ -48,8 +48,8 @@ void MainWindow::updateFinishedStatLabels()
 {
     uint32_t resDepth = ds->getResultingDepth();
     if (resDepth == -1)
-        ui.searchStatusLabel->setText("Поиск завершен. Решение не найдено");
+        ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
     else
-        ui.searchStatusLabel->setText("Поиск завершен. Решение найдено");
+        ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     update();
 }
