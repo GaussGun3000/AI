@@ -6,8 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     mutex.lock();
     QVector<int> startState = { 6, 0, 8, 5, 2, 1, 4, 3, 7 };
     QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
-    ds.reset(new DirectionalSearch(&mutex, 15, startState, targetState));
-    connect(ds.data(), &DirectionalSearch::updateStats, this, &MainWindow::updateStats);
+    int maxDepth = 15;
+    ds = new DirectionalSearch(&mutex, maxDepth, startState, targetState);
+    connect(ds, &DirectionalSearch::updateStats, this, &MainWindow::updateStats);
+    connect(ds, &DirectionalSearch::finished, this, &MainWindow::updateStats);
     ui.setupUi(this);
 }
 

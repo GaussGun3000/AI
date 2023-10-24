@@ -14,7 +14,7 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    QScopedPointer<DirectionalSearch> ds;
+    DirectionalSearch* ds;
     QMutex mutex;
 
 public slots:
