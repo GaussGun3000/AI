@@ -50,10 +50,10 @@ void DirectionalSearch::createNodeLayerStart()
     if (startStack.isEmpty())
         return;
     lastStartNode = startStack.pop();
-    if (lastStartNode->getDepth() >= maxDepth)
+    if (lastStartNode.node->getDepth() >= maxDepth)
         return;
 
-    auto actions = lastStartNode -> getAvailableActions();
+    auto actions = lastStartNode.node -> getAvailableActions();
     for (auto action : actions)
     {
         Node* newNode = new Node(lastStartNode, action);
@@ -66,7 +66,7 @@ void DirectionalSearch::createNodeLayerStart()
         }
         else
         {
-            if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
+            if (node.node->getDepth() > currentDepth) currentDepth=node.node -> getDepth();
             startStack.push(node);
            // lastStartNode = node;
             startDirectionSet.insert(nodeptr);
@@ -80,10 +80,10 @@ void DirectionalSearch::createNodeLayerTarget()
     if (targetStack.isEmpty())
         return;
     lastTargetNode = targetStack.pop();
-    if (lastTargetNode->getDepth() >= maxDepth)
+    if (lastTargetNode.node->getDepth() >= maxDepth)
         return;
 
-    auto actions = lastTargetNode->getAvailableActions();
+    auto actions = lastTargetNode.node->getAvailableActions();
     for (auto action : actions)
     {
         QSharedPointer<Node> node(new Node(lastTargetNode, action));
