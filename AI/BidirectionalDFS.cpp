@@ -68,7 +68,6 @@ void DirectionalSearch::createNodeLayerStart()
         {
             if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
             startStack.push(node);
-           // lastStartNode = node;
             startDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
@@ -97,7 +96,6 @@ void DirectionalSearch::createNodeLayerTarget()
         {
             if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
             targetStack.push(node);
-            lastTargetNode = node;
             targetDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
