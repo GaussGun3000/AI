@@ -5,13 +5,7 @@
 #include <qmutex.h>
 #include <qlist.h>
 #include <qstack.h>
-
-class BidirectionalDFS
-{
-	// reduntant class. Remove later if proven completelt unnecessary
-public:
-	BidirectionalDFS();
-};
+#include <qqueue.h>
 
 class NodePtr {
 public:
@@ -20,7 +14,7 @@ public:
 	QSharedPointer<Node> node;
 };
 
-class DirectionalSearch : public QThread
+class BiDirectionalSearch : public QThread
 {
 	Q_OBJECT
 
@@ -34,8 +28,8 @@ private:
 	QList<QSharedPointer<Node>> nodes;
 	QSharedPointer<Node> lastStartNode;
 	QSharedPointer<Node> lastTargetNode;
-	QStack<QSharedPointer<Node>> startStack;
-	QStack<QSharedPointer<Node>> targetStack;
+	QQueue<QSharedPointer<Node>> startQueue;
+	QQueue<QSharedPointer<Node>> targetQueue;
 	
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
@@ -45,10 +39,36 @@ private:
 	void createNodeLayerTarget();
 
 public:
-	DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
+	BiDirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
 	int32_t getResultingDepth();
 	quint32 getNodesNumSize();
 
 };
 
+class DFS : public QThread 
+{
+	Q_OBJECT
+
+signals:
+	void updateStats(const quint32 depth);
+
+private:
+	QMutex* nextStepPermission;
+	QList<QSharedPointer<Node>> nodes;
+	QSharedPointer<Node> lastNode;
+	QSharedPointer<Node> targetNode;
+	QStack<QSharedPointer<Node>> dfsStack;
+
+	int32_t resultingDepth = -1;
+	uint32_t currentDepth = 0;
+	uint32_t maxDepth;
+	void run() override;
+	void createNodeLayer();
+
+public:
+	DFS(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
+	void setMaxDepth(uint32_t maxDepth);
+	int32_t getResultingDepth();
+	quint32 getNodesNumSize();
+};

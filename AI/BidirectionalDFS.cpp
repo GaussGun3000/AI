@@ -28,12 +28,12 @@ inline bool operator==(const NodePtr& left, const NodePtr& right)
 }
 
 
-void DirectionalSearch::run()
+void BiDirectionalSearch::run()
 {
     currentDepth = 0;
     nextStepPermission->lock();
     nextStepPermission->unlock();
-    while (resultingDepth == -1 && (!startStack.isEmpty() || !targetStack.isEmpty()))
+    while (resultingDepth == -1 && (!startQueue.isEmpty() || !targetQueue.isEmpty()))
     {
         createNodeLayerStart();
         createNodeLayerTarget();
@@ -45,11 +45,11 @@ void DirectionalSearch::run()
     nodes.clear();
 }
 
-void DirectionalSearch::createNodeLayerStart()
+void BiDirectionalSearch::createNodeLayerStart()
 {
-    if (startStack.isEmpty())
+    if (startQueue.isEmpty())
         return;
-    lastStartNode = startStack.pop();
+    lastStartNode = startQueue.dequeue();
     if (lastStartNode->getDepth() >= maxDepth)
         return;
 
@@ -67,18 +67,18 @@ void DirectionalSearch::createNodeLayerStart()
         else
         {
             if (node->getDepth() > currentDepth) currentDepth=node -> getDepth();
-            startStack.push(node);
+            startQueue.enqueue(node);
             startDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
     }
 }
 
-void DirectionalSearch::createNodeLayerTarget()
+void BiDirectionalSearch::createNodeLayerTarget()
 {
-    if (targetStack.isEmpty())
+    if (targetQueue.isEmpty())
         return;
-    lastTargetNode = targetStack.pop();
+    lastTargetNode = targetQueue.dequeue();
     if (lastTargetNode -> getDepth() >= maxDepth)
         return;
 
@@ -95,14 +95,14 @@ void DirectionalSearch::createNodeLayerTarget()
         else
         {
             if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
-            targetStack.push(node);
+            targetQueue.enqueue(node);
             targetDirectionSet.insert(nodeptr);
             nodes.append(node);
         }
     }
 }
 
-DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target):
+BiDirectionalSearch::BiDirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target):
     nextStepPermission(nsp), maxDepth(maxDepth)
 {
     QSharedPointer<Node> nullparent(nullptr);
@@ -110,26 +110,89 @@ DirectionalSearch::DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int
     lastTargetNode = QSharedPointer<Node>::create(target, nullptr, Node::Action::NoAction, 0, 0);
     startDirectionSet.insert(NodePtr(lastStartNode));
     targetDirectionSet.insert(NodePtr(lastTargetNode));
-    startStack.push(lastStartNode);
-    targetStack.push(lastTargetNode);
+    startQueue.enqueue(lastStartNode);
+    targetQueue.enqueue(lastTargetNode);
 }
 
-void DirectionalSearch::setMaxDepth(uint32_t maxDepth)
+void BiDirectionalSearch::setMaxDepth(uint32_t maxDepth)
 {
     this->maxDepth = maxDepth;
 }
 
-int32_t DirectionalSearch::getResultingDepth()
+int32_t BiDirectionalSearch::getResultingDepth()
 {
     return this->resultingDepth;
 }
 
-quint32 DirectionalSearch::getNodesNumSize()
+quint32 BiDirectionalSearch::getNodesNumSize()
 {
     return this->nodes.size();
 }
 
-BidirectionalDFS::BidirectionalDFS()
+//-----------------------------------------------------------
+
+
+void DFS::run()
 {
+    currentDepth = 0;
+    nextStepPermission->lock();
+    nextStepPermission->unlock();
+    while (resultingDepth == -1 && (!dfsStack.isEmpty()))
+    {
+        createNodeLayer();
+        emit updateStats(currentDepth);
+        nextStepPermission->lock();
+        nextStepPermission->unlock();
+    }
+    qDebug() << nodes.size();
+    nodes.clear();
 }
 
+void DFS::createNodeLayer()
+{
+    if (dfsStack.isEmpty())
+        return;
+    lastNode = dfsStack.pop();
+    if (lastNode->getDepth() >= maxDepth)
+        return;
+
+    auto actions = lastNode->getAvailableActions();
+    for (auto action : actions)
+    {
+        Node* newNode = new Node(lastNode, action);
+        QSharedPointer<Node> node(newNode);
+        if (*targetNode == *node)
+        {
+            resultingDepth = node->getDepth();
+        }
+        else
+        {
+            if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
+            dfsStack.push(node);
+            nodes.append(node);
+        }
+    }
+}
+
+DFS::DFS(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target):nextStepPermission(nsp), maxDepth(maxDepth)
+{
+    QSharedPointer<Node> nullparent(nullptr);
+    lastNode = QSharedPointer<Node>::create(start, nullptr, Node::Action::NoAction, 0, 0);
+    targetNode = QSharedPointer<Node>::create(target, nullptr, Node::Action::NoAction, 0, 0);
+    dfsStack.push(lastNode);
+}
+
+void DFS::setMaxDepth(uint32_t maxDepth)
+{
+    this->maxDepth = maxDepth;
+}
+
+int32_t DFS::getResultingDepth()
+{
+    return this->resultingDepth;
+}
+
+quint32 DFS::getNodesNumSize()
+{
+    return this->nodes.size();
+}

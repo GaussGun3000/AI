@@ -14,7 +14,8 @@ public:
 
 private:
     Ui::MainWindowClass ui;
-    DirectionalSearch* ds;
+    BiDirectionalSearch* bds;
+    DFS* dfs;
     QMutex mutex;
 
 public slots:
@@ -22,7 +23,8 @@ public slots:
     void completeButtonClicked();
     void startButtonClicked();
     void updateStatLabels(quint32 depth);
-    void updateFinishedStatLabels();
+    void updateFinishedStatLabelsBDS();
+    void updateFinishedStatLabelsDFS();
     void updateNodeNumLabel();
 
 signals:
