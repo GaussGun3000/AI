@@ -48,6 +48,7 @@ public:
 	DirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
 	int32_t getResultingDepth();
+	quint32 getNodesNumSize();
 
 };
 

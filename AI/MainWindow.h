@@ -21,8 +21,9 @@ public slots:
     void stepButtonClicked();
     void completeButtonClicked();
     void startButtonClicked();
-    void updateStatLabels(uint32_t depth);
+    void updateStatLabels(quint32 depth);
     void updateFinishedStatLabels();
+    void updateNodeNumLabel();
 
 signals:
     void updateStatsFromThread(uint32_t depth);

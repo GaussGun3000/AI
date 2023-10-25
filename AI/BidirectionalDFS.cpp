@@ -124,6 +124,11 @@ int32_t DirectionalSearch::getResultingDepth()
     return this->resultingDepth;
 }
 
+quint32 DirectionalSearch::getNodesNumSize()
+{
+    return this->nodes.size();
+}
+
 BidirectionalDFS::BidirectionalDFS()
 {
 }

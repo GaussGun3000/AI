@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 #include "Node.h"
+#include <QTimer>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,7 +15,12 @@ MainWindow::MainWindow(QWidget *parent)
     ds = new DirectionalSearch(&mutex, maxDepth, startState, targetState);
     connect(ds, &DirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
     connect(ds, &DirectionalSearch::finished, this, &MainWindow::updateFinishedStatLabels);
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::updateNodeNumLabel);
+    timer->start(100);
     ui.setupUi(this);
+    ui.stepButton->setDisabled(true);
+    ui.completeButton->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
@@ -22,6 +28,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::stepButtonClicked()
 {   
+    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
     mutex.unlock();
     mutex.lock();
     //maybe something else
@@ -29,12 +36,16 @@ void MainWindow::stepButtonClicked()
 
 void MainWindow::completeButtonClicked()
 {
+    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
+    ui.stepButton->setDisabled(true);
     mutex.unlock();
 }
 
 void MainWindow::startButtonClicked()
 {
-    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
+    ui.startButton->setDisabled(true);
+    ui.stepButton->setDisabled(false);
+    ui.completeButton->setDisabled(false);
     ds->start();
     update();
 }
@@ -54,4 +65,10 @@ void MainWindow::updateFinishedStatLabels()
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(ds->getResultingDepth()));
     update();
+}
+
+void MainWindow::updateNodeNumLabel()
+{
+    if(ds->getNodesNumSize() != 0)
+        ui.nodesNumLabel->setText(QString::number(ds->getNodesNumSize()));
 }
