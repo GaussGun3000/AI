@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     QVector<int> startState = { 6, 0, 8, 5, 2, 1, 4, 3, 7 };
     QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
     //QVector<int> targetState = { 6, 2, 8, 5, 3, 1, 4, 0, 7 };
-    int maxDepth = 24;
+    int maxDepth = 50;
     bds = new BiDirectionalSearch(&mutex, maxDepth, startState, targetState);
     dfs = new DFS(&mutex, maxDepth, startState, targetState);
     connect(bds, &BiDirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
@@ -78,6 +78,8 @@ void MainWindow::updateFinishedStatLabelsBDS()
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(bds->getResultingDepth()));
     update();
+    ui.stepButton->setDisabled(true);
+    ui.completeButton->setDisabled(true);
 }
 
 void MainWindow::updateFinishedStatLabelsDFS()
@@ -89,6 +91,8 @@ void MainWindow::updateFinishedStatLabelsDFS()
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(dfs->getResultingDepth()));
     update();
+    ui.stepButton->setDisabled(true);
+    ui.completeButton->setDisabled(true);
 }
 
 void MainWindow::updateNodeNumLabel()

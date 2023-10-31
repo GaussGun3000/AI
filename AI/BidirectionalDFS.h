@@ -59,6 +59,7 @@ private:
 	QSharedPointer<Node> lastNode;
 	QSharedPointer<Node> targetNode;
 	QStack<QSharedPointer<Node>> dfsStack;
+	QSet<NodePtr> uniqueStatesSet;
 
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
