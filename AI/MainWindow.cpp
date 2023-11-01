@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     QTimer* timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::updateNodeNumLabel);
-    timer->start(100);
+    timer->start(1);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -80,6 +80,9 @@ void MainWindow::updateFinishedStatLabelsBDS()
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
+    ui.startButton->setDisabled(false);
+    ui.typeComboBox->setDisabled(false);
+    mutex.lock();
 }
 
 void MainWindow::updateFinishedStatLabelsDFS()
@@ -93,6 +96,9 @@ void MainWindow::updateFinishedStatLabelsDFS()
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
+    ui.startButton->setDisabled(false);
+    ui.typeComboBox->setDisabled(false);
+    mutex.lock();
 }
 
 void MainWindow::updateNodeNumLabel()
