@@ -27,7 +27,6 @@ inline bool operator==(const NodePtr& left, const NodePtr& right)
     return left.node->getState() == right.node->getState();
 }
 
-
 void BiDirectionalSearch::run()
 {
     init();
@@ -39,6 +38,7 @@ void BiDirectionalSearch::run()
         createNodeLayerStart();
         createNodeLayerTarget();
         emit updateStats(currentDepth);
+        steps++;
         nextStepPermission->lock();
         nextStepPermission->unlock();
     }
@@ -70,6 +70,7 @@ void BiDirectionalSearch::createNodeLayerStart()
             if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
             if (!startDirectionSet.contains(nodeptr))
             {
+                nodeCount++;
                 startQueue.enqueue(node);
                 startDirectionSet.insert(nodeptr);
             }
@@ -101,6 +102,7 @@ void BiDirectionalSearch::createNodeLayerTarget()
             if (node->getDepth() > currentDepth) currentDepth = node->getDepth();
             if (!targetDirectionSet.contains(nodeptr))
             {
+                nodeCount++;
                 targetQueue.enqueue(node);
                 targetDirectionSet.insert(nodeptr);
             }
@@ -118,6 +120,8 @@ void BiDirectionalSearch::init()
     startQueue.enqueue(lastStartNode);
     targetQueue.enqueue(lastTargetNode);
     resultingDepth = -1;
+    nodeCount = 0;
+    steps = 0;
 }
 
 void BiDirectionalSearch::cleanup()
@@ -148,9 +152,25 @@ int32_t BiDirectionalSearch::getResultingDepth()
     return this->resultingDepth;
 }
 
-quint32 BiDirectionalSearch::getNodesNumSize()
+quint32 BiDirectionalSearch::getNodeCount()
 {
-    return this->nodes.size();
+    return this->nodeCount;
+}
+
+quint32 BiDirectionalSearch::getStepCount()
+{
+    return this->steps;
+}
+
+
+QString BiDirectionalSearch::getLastStartNodeStateString() const
+{
+    return lastStartNode->getStateString();
+}
+
+QString BiDirectionalSearch::getLastTargetNodeStateString() const
+{
+    return lastTargetNode->getStateString();
 }
 
 //---------------------------------------------
@@ -165,6 +185,7 @@ void DFS::run()
     {
         createNodeLayer();
         emit updateStats(currentDepth);
+        steps++;
         nextStepPermission->lock();
         nextStepPermission->unlock();
     }
@@ -197,6 +218,7 @@ void DFS::createNodeLayer()
             {
                 dfsStack.push(node);
                 uniqueStatesSet.insert(nodeptr);
+                nodeCount++;
             }
            // nodes.append(node);
         }
@@ -220,16 +242,30 @@ int32_t DFS::getResultingDepth()
     return this->resultingDepth;
 }
 
-quint32 DFS::getNodesNumSize()
+quint32 DFS::getNodeCount()
 {
-    return this->uniqueStatesSet.size();
+    return this->nodeCount;
 }
+
+quint32 DFS::getStepCount()
+{
+    return this->steps;
+}
+
+QString DFS::getLastNodeStateString() const
+{
+    return this->lastNode->getStateString();
+}
+
+
 
 void DFS::init()
 {
     lastNode = QSharedPointer<Node>(startNode);
     dfsStack.push(lastNode);
     resultingDepth = -1;
+    nodeCount = 0;
+    steps = 0;
 }
 
 void DFS::cleanup()

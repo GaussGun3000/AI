@@ -36,6 +36,8 @@ private:
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
 	uint32_t maxDepth;
+	uint32_t steps;
+	uint32_t nodeCount;
 	void run() override;
 	void createNodeLayerStart();
 	void createNodeLayerTarget();
@@ -45,7 +47,10 @@ public:
 	BiDirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
 	int32_t getResultingDepth();
-	quint32 getNodesNumSize();
+	quint32 getNodeCount();
+	quint32 getStepCount();
+	QString getLastStartNodeStateString() const;
+	QString getLastTargetNodeStateString() const;
 
 };
 
@@ -67,6 +72,8 @@ private:
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
 	uint32_t maxDepth;
+	uint32_t steps;
+	uint32_t nodeCount;
 	void run() override;
 	void createNodeLayer();
 	void init();
@@ -75,5 +82,7 @@ public:
 	DFS(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
 	int32_t getResultingDepth();
-	quint32 getNodesNumSize();
+	quint32 getNodeCount();
+	quint32 getStepCount();
+	QString getLastNodeStateString() const;
 };

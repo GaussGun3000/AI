@@ -100,6 +100,24 @@ void Node::setAction(Action action)
 	this->action = action;
 }
 
+QString Node::getStateString()
+{
+	const QVector<int>& state = getState();
+	QString formattedState;
+	for (int i = 0; i < 3; ++i) {
+		for (int j = 0; j < 3; ++j) {
+			formattedState.append(QString::number(state[i * 3 + j]));
+			if (j < 2) { 
+				formattedState.append(' ');
+			}
+		}
+		if (i < 2) {
+			formattedState.append('\n');
+		}
+	}
+	return formattedState;
+}
+
 void Node::applyAction(Action action)
 {
 	int zeroPos = this->state.indexOf(0);
