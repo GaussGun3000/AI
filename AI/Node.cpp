@@ -55,6 +55,11 @@ Node::Node()
 	depth = 0;
 }
 
+Node::~Node()
+{
+	parent.reset();
+}
+
 QList<Node::Action> Node::getAvailableActions() const
 {
 	int zeroPos = this->state.indexOf(0);

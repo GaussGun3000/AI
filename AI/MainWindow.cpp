@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     QVector<int> startState = { 6, 0, 8, 5, 2, 1, 4, 3, 7 };
     QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
     //QVector<int> targetState = { 6, 2, 8, 5, 3, 1, 4, 0, 7 };
-    int maxDepth = 50;
+    int maxDepth = 500000;
     bds = new BiDirectionalSearch(&mutex, maxDepth, startState, targetState);
     dfs = new DFS(&mutex, maxDepth, startState, targetState);
     connect(bds, &BiDirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);

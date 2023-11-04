@@ -31,13 +31,16 @@ private:
 	QQueue<QSharedPointer<Node>> startQueue;
 	QQueue<QSharedPointer<Node>> targetQueue;
 	
+	QSharedPointer<Node> startNode;
+	QSharedPointer<Node> target;
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
 	uint32_t maxDepth;
 	void run() override;
 	void createNodeLayerStart();
 	void createNodeLayerTarget();
-
+	void init();
+	void cleanup();
 public:
 	BiDirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);
@@ -55,18 +58,19 @@ signals:
 
 private:
 	QMutex* nextStepPermission;
-	QList<QSharedPointer<Node>> nodes;
 	QSharedPointer<Node> lastNode;
 	QSharedPointer<Node> targetNode;
 	QStack<QSharedPointer<Node>> dfsStack;
 	QSet<NodePtr> uniqueStatesSet;
+	QSharedPointer<Node> startNode;
 
 	int32_t resultingDepth = -1;
 	uint32_t currentDepth = 0;
 	uint32_t maxDepth;
 	void run() override;
 	void createNodeLayer();
-
+	void init();
+	void cleanup();
 public:
 	DFS(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
 	void setMaxDepth(uint32_t maxDepth);

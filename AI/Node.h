@@ -28,6 +28,7 @@ public:
 	Node(QVector<int> state, Node* parent, Action action, int depth, int cost);
 	Node(const Node& other);
 	Node();
+	~Node();
 
 	Node& operator=(const Node& other);
 	bool operator==(const Node& other) const;
