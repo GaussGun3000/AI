@@ -23,6 +23,7 @@ public:
 	void setCost(uint32_t cost);
 	void setParent(QSharedPointer<Node> parent);
 	void setAction(Action action);
+	QString getStateString();
 
 	Node(QSharedPointer<Node>& node, Action action);
 	Node(QVector<int> state, Node* parent, Action action, int depth, int cost);

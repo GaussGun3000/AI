@@ -39,6 +39,7 @@ void MainWindow::stepButtonClicked()
 
 void MainWindow::completeButtonClicked()
 {
+    this->inSingleStepMode = false;
     ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
     ui.stepButton->setDisabled(true);
     mutex.unlock();
@@ -46,12 +47,13 @@ void MainWindow::completeButtonClicked()
 
 void MainWindow::startButtonClicked()
 {
+    this->inSingleStepMode = true;
     ui.startButton->setDisabled(true);
     ui.stepButton->setDisabled(false);
     ui.completeButton->setDisabled(false);
     ui.typeComboBox->setDisabled(true);
     auto mode = ui.typeComboBox->currentIndex();
-    if (mode == 0)
+    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
     {
         bds->start();
     }
@@ -66,7 +68,23 @@ void MainWindow::startButtonClicked()
 void MainWindow::updateStatLabels(quint32 depth)
 {
     ui.depthLabel->setText(QString::number(depth));
-    update();
+    auto mode = ui.typeComboBox->currentIndex();
+    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
+    {
+        bds->getNodeCount();
+        bds->getStepCount();
+        if (this->inSingleStepMode)
+        {
+            bds->getLastStartNodeStateString(); // update the label with state 
+            bds->getLastTargetNodeStateString(); // update the label with state
+        }
+    }
+    else
+    {
+        bds->getNodeCount();
+        bds->getStepCount();
+        if (this->inSingleStepMode) bds->getLastStartNodeStateString(); // update the label with state
+    }
 }
 
 void MainWindow::updateFinishedStatLabelsBDS()
@@ -104,7 +122,7 @@ void MainWindow::updateFinishedStatLabelsDFS()
 void MainWindow::updateNodeNumLabel()
 {
     auto mode = ui.typeComboBox->currentIndex();
-    if (mode == 0)
+    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
     {
         if (bds->getNodesNumSize() != 0)
             ui.nodesNumLabel->setText(QString::number(bds->getNodesNumSize()));

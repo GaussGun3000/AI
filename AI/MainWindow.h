@@ -17,6 +17,8 @@ private:
     BiDirectionalSearch* bds;
     DFS* dfs;
     QMutex mutex;
+    bool inSingleStepMode;
+    enum class SearchMode {BiDS=0, DFS=1};
 
 public slots:
     void stepButtonClicked();
