@@ -30,6 +30,13 @@
        </size>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="4" column="1">
+        <widget class="QLabel" name="searchStatusLabel">
+         <property name="text">
+          <string>Поиск не начат</string>
+         </property>
+        </widget>
+       </item>
        <item row="1" column="1">
         <widget class="QLabel" name="depthLabel">
          <property name="text">
@@ -37,24 +44,29 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>80</height>
+          </size>
+         </property>
          <property name="text">
-          <string>Текущее количество узлов:</string>
+          <string>Стоимость решения:</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="nodesNumLabel">
-         <property name="text">
-          <string>0</string>
+       <item row="4" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>80</height>
+          </size>
          </property>
-        </widget>
-       </item>
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>Тип поиска</string>
+          <string>Результат поиска:</string>
          </property>
         </widget>
        </item>
@@ -72,24 +84,16 @@
          </item>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Стоимость решения:</string>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>80</height>
+          </size>
          </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Результат поиска:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="searchStatusLabel">
-         <property name="text">
-          <string>Поиск не начат</string>
+          <string>Тип поиска</string>
          </property>
         </widget>
        </item>
@@ -149,7 +153,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="capacitiveComplexityWidget">
+        <widget class="QLabel" name="capacitiveComplexityLabel">
          <property name="text">
           <string>0</string>
          </property>
@@ -191,39 +195,13 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget_2" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QLabel" name="label_14">
-               <property name="text">
-                <string>1 2 3</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_15">
-               <property name="text">
-                <string>8 0 4</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_16">
-               <property name="text">
-                <string>7 6 5</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <widget class="QLabel" name="targetDirStateLabel">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
            </widget>
           </item>
          </layout>
@@ -246,39 +224,13 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
-            <layout class="QVBoxLayout" name="verticalLayout">
-             <item>
-              <widget class="QLabel" name="label_5">
-               <property name="text">
-                <string>6 0 8</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_9">
-               <property name="text">
-                <string>5 2 1</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_13">
-               <property name="text">
-                <string>4 3 7</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-              </widget>
-             </item>
-            </layout>
+           <widget class="QLabel" name="startDirStateLabel">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
            </widget>
           </item>
          </layout>
@@ -380,8 +332,8 @@
    <slot>stepButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>197</x>
-     <y>362</y>
+     <x>497</x>
+     <y>723</y>
     </hint>
     <hint type="destinationlabel">
      <x>156</x>
@@ -396,8 +348,8 @@
    <slot>completeButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>362</y>
+     <x>849</x>
+     <y>723</y>
     </hint>
     <hint type="destinationlabel">
      <x>327</x>
@@ -412,12 +364,28 @@
    <slot>startButtonClicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>296</x>
-     <y>218</y>
+     <x>292</x>
+     <y>723</y>
     </hint>
     <hint type="destinationlabel">
      <x>304</x>
      <y>5</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>typeComboBox</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindowClass</receiver>
+   <slot>modeChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>601</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>601</x>
+     <y>4</y>
     </hint>
    </hints>
   </connection>
@@ -427,5 +395,6 @@
   <slot>stepButtonClicked()</slot>
   <slot>completeButtonClicked()</slot>
   <slot>startButtonClicked()</slot>
+  <slot>modeChanged()</slot>
  </slots>
 </ui>

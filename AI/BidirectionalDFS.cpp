@@ -55,9 +55,11 @@ void BiDirectionalSearch::createNodeLayerStart()
     //    return;
 
     auto actions = lastStartNode->getAvailableActions();
+    qDebug() << "start childes:";
     for (auto action : actions)
     {
         Node* newNode = new Node(lastStartNode, action);
+        qDebug() << newNode->getStateString();
         QSharedPointer<Node> node(newNode);
         NodePtr nodeptr(node);
         if (targetDirectionSet.contains(nodeptr))
@@ -88,9 +90,11 @@ void BiDirectionalSearch::createNodeLayerTarget()
     //    return;
 
     auto actions = lastTargetNode->getAvailableActions();
+    qDebug() << "target childes:";
     for (auto action : actions)
     {
         QSharedPointer<Node> node(new Node(lastTargetNode, action));
+        qDebug() << node->getStateString();
         NodePtr nodeptr(node);
         if (startDirectionSet.contains(nodeptr))
         {

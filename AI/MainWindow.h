@@ -27,7 +27,7 @@ public slots:
     void updateStatLabels(quint32 depth);
     void updateFinishedStatLabelsBDS();
     void updateFinishedStatLabelsDFS();
-    void updateNodeNumLabel();
+    void modeChanged();
 
 signals:
     void updateStatsFromThread(uint32_t depth);

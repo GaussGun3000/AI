@@ -16,10 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(dfs, &DFS::updateStats, this, &MainWindow::updateStatLabels);
     connect(bds, &BiDirectionalSearch::finished, this, &MainWindow::updateFinishedStatLabelsBDS);
     connect(dfs, &DFS::finished, this, &MainWindow::updateFinishedStatLabelsDFS);
-    
-    QTimer* timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &MainWindow::updateNodeNumLabel);
-    timer->start(1);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -71,19 +67,20 @@ void MainWindow::updateStatLabels(quint32 depth)
     auto mode = ui.typeComboBox->currentIndex();
     if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
     {
-        bds->getNodeCount();
-        bds->getStepCount();
+        ui.timeComplexityLabel->setText(QString::number(bds->getStepCount()));
+        ui.capacitiveComplexityLabel->setText(QString::number(bds->getNodeCount()));
         if (this->inSingleStepMode)
         {
-            bds->getLastStartNodeStateString(); // update the label with state 
-            bds->getLastTargetNodeStateString(); // update the label with state
+            ui.startDirStateLabel->setText(QString(bds->getLastStartNodeStateString()));
+            ui.targetDirStateLabel->setText(QString(bds->getLastTargetNodeStateString()));
         }
     }
     else
     {
-        bds->getNodeCount();
-        bds->getStepCount();
-        if (this->inSingleStepMode) bds->getLastStartNodeStateString(); // update the label with state
+        ui.timeComplexityLabel->setText(QString::number(dfs->getStepCount()));
+        ui.capacitiveComplexityLabel->setText(QString::number(dfs->getNodeCount()));
+        if (this->inSingleStepMode) 
+            ui.startDirStateLabel->setText(QString(dfs->getLastNodeStateString()));
     }
 }
 
@@ -95,6 +92,8 @@ void MainWindow::updateFinishedStatLabelsBDS()
     else
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(bds->getResultingDepth()));
+    ui.startDirStateLabel->setText(QString(bds->getLastStartNodeStateString()));
+    ui.targetDirStateLabel->setText(QString(bds->getLastTargetNodeStateString()));
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
@@ -111,6 +110,7 @@ void MainWindow::updateFinishedStatLabelsDFS()
     else
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(dfs->getResultingDepth()));
+    ui.startDirStateLabel->setText(QString(dfs->getLastNodeStateString()));
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
@@ -119,17 +119,20 @@ void MainWindow::updateFinishedStatLabelsDFS()
     mutex.lock();
 }
 
-void MainWindow::updateNodeNumLabel()
+void MainWindow::modeChanged()
 {
     auto mode = ui.typeComboBox->currentIndex();
     if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
     {
-        if (bds->getNodesNumSize() != 0)
-            ui.nodesNumLabel->setText(QString::number(bds->getNodesNumSize()));
+        ui.biDirectWidget->setVisible(true);
+        ui.targetDirLabel->setVisible(true);
+        ui.startDirLabel->setVisible(true);
+
     }
     else
     {
-        if (dfs->getNodesNumSize() != 0)
-            ui.nodesNumLabel->setText(QString::number(dfs->getNodesNumSize()));
+        ui.biDirectWidget->setVisible(false);
+        ui.targetDirLabel->setVisible(false);
+        ui.startDirLabel->setVisible(false);
     }
 }
