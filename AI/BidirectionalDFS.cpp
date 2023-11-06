@@ -177,6 +177,16 @@ QString BiDirectionalSearch::getLastTargetNodeStateString() const
     return lastTargetNode->getStateString();
 }
 
+QString BiDirectionalSearch::getParentLastStartNodeStateString() const
+{
+    return lastStartNode->getParent()->getStateString();
+}
+
+QString BiDirectionalSearch::getParentLastTargetNodeStateString() const
+{
+    return lastTargetNode->getParent()->getStateString();
+}
+
 //---------------------------------------------
 
 void DFS::run()
@@ -259,6 +269,11 @@ quint32 DFS::getStepCount()
 QString DFS::getLastNodeStateString() const
 {
     return this->lastNode->getStateString();
+}
+
+QString DFS::getParentLastNodeStateString() const
+{
+    return this->lastNode->getParent()->getStateString();
 }
 
 

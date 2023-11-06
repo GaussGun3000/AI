@@ -73,14 +73,31 @@ void MainWindow::updateStatLabels(quint32 depth)
         {
             ui.startDirStateLabel->setText(QString(bds->getLastStartNodeStateString()));
             ui.targetDirStateLabel->setText(QString(bds->getLastTargetNodeStateString()));
+            if (bds->getStepCount() > 1)
+            {
+                ui.parentStartDirStateLabel->setText(QString(bds->getParentLastStartNodeStateString()));
+                ui.parentTargetDirStateLabel->setText(QString(bds->getParentLastTargetNodeStateString()));
+            } 
+            else
+            {
+                ui.parentStartDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+                ui.parentTargetDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+            }
         }
     }
     else
     {
         ui.timeComplexityLabel->setText(QString::number(dfs->getStepCount()));
         ui.capacitiveComplexityLabel->setText(QString::number(dfs->getNodeCount()));
-        if (this->inSingleStepMode) 
+        if (this->inSingleStepMode)
+        {
             ui.startDirStateLabel->setText(QString(dfs->getLastNodeStateString()));
+            if(dfs->getStepCount() > 1)
+                ui.parentStartDirStateLabel->setText(QString(dfs->getParentLastNodeStateString()));
+            else
+                ui.parentStartDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        }
+            
     }
 }
 
@@ -94,6 +111,16 @@ void MainWindow::updateFinishedStatLabelsBDS()
     ui.depthLabel->setText(QString::number(bds->getResultingDepth()));
     ui.startDirStateLabel->setText(QString(bds->getLastStartNodeStateString()));
     ui.targetDirStateLabel->setText(QString(bds->getLastTargetNodeStateString()));
+    if (bds->getStepCount() > 1)
+    {
+        ui.parentStartDirStateLabel->setText(QString(bds->getParentLastStartNodeStateString()));
+        ui.parentTargetDirStateLabel->setText(QString(bds->getParentLastTargetNodeStateString()));
+    }
+    else
+    {
+        ui.parentStartDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        ui.parentTargetDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+    }
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
@@ -111,6 +138,10 @@ void MainWindow::updateFinishedStatLabelsDFS()
         ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
     ui.depthLabel->setText(QString::number(dfs->getResultingDepth()));
     ui.startDirStateLabel->setText(QString(dfs->getLastNodeStateString()));
+    if (dfs->getStepCount() > 1)
+        ui.parentStartDirStateLabel->setText(QString(dfs->getParentLastNodeStateString()));
+    else
+        ui.parentStartDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
@@ -122,6 +153,10 @@ void MainWindow::updateFinishedStatLabelsDFS()
 void MainWindow::modeChanged()
 {
     auto mode = ui.typeComboBox->currentIndex();
+    ui.parentStartDirStateLabel->clear();
+    ui.startDirStateLabel->clear();
+    ui.parentTargetDirStateLabel->clear();
+    ui.targetDirStateLabel->clear();
     if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
     {
         ui.biDirectWidget->setVisible(true);

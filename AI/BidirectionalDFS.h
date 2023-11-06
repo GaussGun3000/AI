@@ -38,6 +38,7 @@ private:
 	uint32_t maxDepth;
 	uint32_t steps;
 	uint32_t nodeCount;
+
 	void run() override;
 	void createNodeLayerStart();
 	void createNodeLayerTarget();
@@ -45,12 +46,16 @@ private:
 	void cleanup();
 public:
 	BiDirectionalSearch(QMutex* nsp, uint32_t maxDepth, QVector<int>& start, QVector<int>& target);
+	
 	void setMaxDepth(uint32_t maxDepth);
+	
 	int32_t getResultingDepth();
 	quint32 getNodeCount();
 	quint32 getStepCount();
 	QString getLastStartNodeStateString() const;
 	QString getLastTargetNodeStateString() const;
+	QString getParentLastStartNodeStateString() const;
+	QString getParentLastTargetNodeStateString() const;
 
 };
 
@@ -85,4 +90,5 @@ public:
 	quint32 getNodeCount();
 	quint32 getStepCount();
 	QString getLastNodeStateString() const;
+	QString getParentLastNodeStateString() const;
 };
