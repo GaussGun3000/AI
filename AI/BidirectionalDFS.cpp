@@ -36,7 +36,7 @@ void BiDirectionalSearch::run()
     while (resultingDepth == -1 && (!startQueue.isEmpty() || !targetQueue.isEmpty()))
     {
         createNodeLayerStart();
-        createNodeLayerTarget();
+        if(resultingDepth == -1) createNodeLayerTarget();
         emit updateStats(currentDepth);
         steps++;
         nextStepPermission->lock();
