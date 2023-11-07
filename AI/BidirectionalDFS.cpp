@@ -36,7 +36,7 @@ void BiDirectionalSearch::run()
     while (resultingDepth == -1 && (!startQueue.isEmpty() || !targetQueue.isEmpty()))
     {
         createNodeLayerStart();
-        createNodeLayerTarget();
+        if (resultingDepth == -1) createNodeLayerTarget();
         emit updateStats(currentDepth);
         steps++;
         nextStepPermission->lock();
@@ -55,9 +55,11 @@ void BiDirectionalSearch::createNodeLayerStart()
     //    return;
 
     auto actions = lastStartNode->getAvailableActions();
+    qDebug() << "start childes:";
     for (auto action : actions)
     {
         Node* newNode = new Node(lastStartNode, action);
+        qDebug() << newNode->getStateString();
         QSharedPointer<Node> node(newNode);
         NodePtr nodeptr(node);
         if (targetDirectionSet.contains(nodeptr))
@@ -88,9 +90,11 @@ void BiDirectionalSearch::createNodeLayerTarget()
     //    return;
 
     auto actions = lastTargetNode->getAvailableActions();
+    qDebug() << "target childes:";
     for (auto action : actions)
     {
         QSharedPointer<Node> node(new Node(lastTargetNode, action));
+        qDebug() << node->getStateString();
         NodePtr nodeptr(node);
         if (startDirectionSet.contains(nodeptr))
         {
@@ -173,6 +177,16 @@ QString BiDirectionalSearch::getLastTargetNodeStateString() const
     return lastTargetNode->getStateString();
 }
 
+QString BiDirectionalSearch::getParentLastStartNodeStateString() const
+{
+    return lastStartNode->getParent()->getStateString();
+}
+
+QString BiDirectionalSearch::getParentLastTargetNodeStateString() const
+{
+    return lastTargetNode->getParent()->getStateString();
+}
+
 //---------------------------------------------
 
 void DFS::run()
@@ -198,8 +212,8 @@ void DFS::createNodeLayer()
     if (dfsStack.isEmpty())
         return;
     lastNode = dfsStack.pop();
- /*   if (lastNode->getDepth() >= maxDepth)
-        return;*/
+    /*   if (lastNode->getDepth() >= maxDepth)
+           return;*/
 
     auto actions = lastNode->getAvailableActions();
     for (auto action : actions)
@@ -220,7 +234,7 @@ void DFS::createNodeLayer()
                 uniqueStatesSet.insert(nodeptr);
                 nodeCount++;
             }
-           // nodes.append(node);
+            // nodes.append(node);
         }
     }
 }
@@ -255,6 +269,11 @@ quint32 DFS::getStepCount()
 QString DFS::getLastNodeStateString() const
 {
     return this->lastNode->getStateString();
+}
+
+QString DFS::getParentLastNodeStateString() const
+{
+    return this->lastNode->getParent()->getStateString();
 }
 
 
