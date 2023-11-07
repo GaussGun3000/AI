@@ -1,19 +1,19 @@
-#include "BFS.h"
+#include "GreedySearch.h"
 
-BFS::BFS(Node startNode, Node targetNode)
+GreedySearch::GreedySearch(Node startNode, Node targetNode)
 {
 }
 
-void BFS::run()
+void GreedySearch::run()
 {
 }
 
-void BFS::run()
+void GreedySearch::run()
 {
     initialize();
 }
 
-void BFS::initialize()
+void GreedySearch::initialize()
 {
     // Initialize the open set (queue) with the start node
     QQueue<QSharedPointer<Node>> openSet;
@@ -31,7 +31,7 @@ void BFS::initialize()
     emit updateStats(UINT32_MAX); // You can define a special value for failure if needed
 }
 
-void BFS::searchStep(QQueue<QSharedPointer<Node>>& openSet, QSet<QVector<int>>& closedSet)
+void GreedySearch::searchStep(QQueue<QSharedPointer<Node>>& openSet, QSet<QVector<int>>& closedSet)
 {
     // Get the current node from the front of the open set
     QSharedPointer<Node> currentNode = openSet.dequeue();
@@ -62,7 +62,7 @@ void BFS::searchStep(QQueue<QSharedPointer<Node>>& openSet, QSet<QVector<int>>& 
 }
 
 // Implement your h1 heuristic function here
-uint32_t BFS::h(const Node& node)
+uint32_t GreedySearch::h(const Node& node)
 {
     // Calculate and return the h1 value for the given node
     // This function should define the number of misplaced tiles or any suitable heuristic
@@ -70,13 +70,18 @@ uint32_t BFS::h(const Node& node)
 }
 
 // Implement your expandNode function here
-QList<QSharedPointer<Node>> BFS::expandNode(const QSharedPointer<Node>& node)
+QList<QSharedPointer<Node>> GreedySearch::expandNode(const QSharedPointer<Node>& node)
 {
     // Generate and return a list of child nodes based on legal actions from the given node
 }
 
-uint32_t BFS::h(const Node& node)
+QQueue<QSharedPointer<Node>> GreedySearch::queuingFunction(const QQueue<QSharedPointer<Node>>& nodeQueue)
 {
-	return 0;
+    return QQueue<QSharedPointer<Node>>();
+}
+
+uint32_t GreedySearch::h(const Node& node)
+{
+    return 0;
 }
 

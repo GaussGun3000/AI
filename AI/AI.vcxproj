@@ -84,7 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AStar.cpp" />
-    <ClCompile Include="BFS.cpp" />
+    <ClCompile Include="GreedySearch.cpp" />
     <ClCompile Include="Node.cpp" />
     <QtRcc Include="MainWindow.qrc" />
     <QtUic Include="MainWindow.ui" />
@@ -94,7 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AStar.h" />
-    <QtMoc Include="BFS.h" />
+    <QtMoc Include="GreedySearch.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
