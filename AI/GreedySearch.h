@@ -13,29 +13,22 @@ public:
     QSharedPointer<Node> node;
 };
 
-class GreedySearch : public QThread
-{
+class GreedySearch : public QThread {
     Q_OBJECT
 
 public:
-    enum class hFunction { h1 = 0, h2 = 1 };
-    GreedySearch(Node startNode, Node targetNode);
+    enum class HFunction { h1 = 0, h2 = 1 };
+    GreedySearch(const QVector<int>& startState, const QVector<int>& goalState, QObject* parent = nullptr);
 
 signals:
-    void updateStats(uint32_t depth);
+    void targetFound(QSharedPointer<Node> targetNode); 
+    void searchFailed();
+
+protected:
+    void run() override;
 
 private:
-    QSharedPointer<Node> startNode;
-    QSharedPointer<Node> targetNode;
-    QQueue<QSharedPointer<Node>> nodeQueue;
-
-    void run() override;
-    void initialize();
-    void searchStep(QQueue<QSharedPointer<Node>>& openSet, QSet<QVector<int>>& closedSet);
-
-    QList<QSharedPointer<Node>> expandNode(const QSharedPointer<Node>& node);
-    QQueue<QSharedPointer<Node>> queuingFunction(const QQueue<QSharedPointer<Node>>& nodeQueue);
-
-    uint32_t h(const Node& node);
-
+    int h(const QVector<int>& state);
+    QVector<int> startState;
+    QVector<int> targetState;
 };

@@ -1,87 +1,56 @@
 #include "GreedySearch.h"
+#include <QSet>
+#include <algorithm>
 
-GreedySearch::GreedySearch(Node startNode, Node targetNode)
-{
-}
+ GreedySearch:: GreedySearch(const QVector<int>& startState, const QVector<int>& goalState, QObject* parent)
+    : QThread(parent), startState(startState), targetState(goalState) {}
 
-void GreedySearch::run()
-{
-}
-
-void GreedySearch::run()
-{
-    initialize();
-}
-
-void GreedySearch::initialize()
-{
-    // Initialize the open set (queue) with the start node
-    QQueue<QSharedPointer<Node>> openSet;
-    openSet.enqueue(startNode);
-
-    // Initialize the closed set (visited nodes)
-    QSet<QVector<int>> closedSet;
-
-    while (!openSet.isEmpty())
-    {
-        searchStep(openSet, closedSet);
-    }
-
-    // If the open set is empty and no solution was found, emit a signal to indicate failure
-    emit updateStats(UINT32_MAX); // You can define a special value for failure if needed
-}
-
-void GreedySearch::searchStep(QQueue<QSharedPointer<Node>>& openSet, QSet<QVector<int>>& closedSet)
-{
-    // Get the current node from the front of the open set
-    QSharedPointer<Node> currentNode = openSet.dequeue();
-
-    // Check if the current node is the target node
-    if (*currentNode == *targetNode)
-    {
-        // We found the solution, emit the depth signal and return
-        emit updateStats(currentNode->getDepth());
-        return;
-    }
-
-    // Mark the current node as visited
-    closedSet.insert(currentNode->getState());
-
-    // Expand the current node's children (nodes reachable by legal actions)
-    QList<QSharedPointer<Node>> children = expandNode(currentNode);
-
-    for (const QSharedPointer<Node>& child : children)
-    {
-        // Check if the child node is not in the closed set
-        if (!closedSet.contains(child->getState()))
-        {
-            // Add the child node to the open set
-            openSet.enqueue(child);
+int  GreedySearch::h(const QVector<int>& state) {
+    int count = 0;
+    for (int i = 0; i < state.size(); ++i) {
+        if (state[i] != targetState[i] && state[i] != 0) { // Assuming 0 is the blank tile
+            ++count;
         }
     }
+    return count;
 }
 
-// Implement your h1 heuristic function here
-uint32_t GreedySearch::h(const Node& node)
-{
-    // Calculate and return the h1 value for the given node
-    // This function should define the number of misplaced tiles or any suitable heuristic
-    // Example: return the count of tiles that are not in their goal positions
-}
+void  GreedySearch::run() {
+    QSharedPointer<Node> root = QSharedPointer<Node>::create(startState, nullptr, Node::Action::NoAction, 0, 0);
+    QSet<QVector<int>> visited;
+    QList<QSharedPointer<Node>> frontier;
+    frontier.append(root);
 
-// Implement your expandNode function here
-QList<QSharedPointer<Node>> GreedySearch::expandNode(const QSharedPointer<Node>& node)
-{
-    // Generate and return a list of child nodes based on legal actions from the given node
-}
+    while (!frontier.isEmpty()) {
+        std::sort(frontier.begin(), frontier.end(), [this](const QSharedPointer<Node>& nodeA, const QSharedPointer<Node>& nodeB) {
+            return h(nodeA->getState()) < h1(nodeB->getState());
+            });
 
-QQueue<QSharedPointer<Node>> GreedySearch::queuingFunction(const QQueue<QSharedPointer<Node>>& nodeQueue)
-{
-    return QQueue<QSharedPointer<Node>>();
-}
+        QSharedPointer<Node> currentNode = frontier.takeFirst();
+        QVector<int> currentState = currentNode->getState();
 
-uint32_t GreedySearch::h(const Node& node)
-{
-    return 0;
-}
+        if (visited.contains(currentState)) {
+            continue; // Skip already visited states
+        }
 
+        if (currentState == targetState) {
+            emit targetFound(currentNode);
+            return;
+        }
+
+        visited.insert(currentState);
+
+        QList<Node::Action> actions = currentNode->getAvailableActions();
+        for (Node::Action action : actions) {
+            QVector<int> newState = currentState;
+            // Apply action to newState...
+            // Make sure to implement the action application logic according to your puzzle rules
+
+            if (!visited.contains(newState)) {
+                QSharedPointer<Node> newNode = QSharedPointer<Node>::create(newState, currentNode.data(), action, currentNode->getDepth() + 1, currentNode->getCost() + 1);
+                frontier.append(newNode);
+            }
+        }
+    }
+    emit searchFailed(); // No solution found
+}
