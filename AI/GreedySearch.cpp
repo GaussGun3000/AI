@@ -147,7 +147,7 @@ void  GreedySearch::run()
     init();
     nextStepPermission->lock();
     nextStepPermission->unlock();
-    while (!priorityQueue.empty()) {
+    while (resultingDepth == -1 && !priorityQueue.empty()) {
         emit updateStats(currentDepth);
         iteration();
         steps++;
