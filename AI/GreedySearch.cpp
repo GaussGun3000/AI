@@ -1,6 +1,7 @@
 #include "GreedySearch.h"
 #include <QSet>
 #include <algorithm>
+#include <QDebug>
 
 uint statehash(const QVector<int>& vector)
 {
@@ -34,6 +35,10 @@ GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int
     startState(startState), targetState(targetState) {
     // Constructor implementation
     // You may initialize other members if necessary
+}
+
+GreedySearch::GreedySearch()
+{
 }
 
 int GreedySearch::h(const QSharedPointer<Node>& node) {
@@ -149,5 +154,6 @@ void  GreedySearch::run()
         nextStepPermission->lock();
         nextStepPermission->unlock();
     }
+    qDebug() << "steps: " << steps << "nodes: " << uniqueStates.size() << "queue size: " << priorityQueue.size();
     cleanup();
 }

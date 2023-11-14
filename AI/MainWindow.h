@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_MainWindow.h"
-#include "GreedySearch.h"
+#include "AStar.h"
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +16,8 @@ private:
     Ui::MainWindowClass ui;
     GreedySearch* gsh1;
     GreedySearch* gsh2;
-    //AStar* astar;
+    AStar* ash1;
+    AStar* ash2;
     QMutex mutex;
     bool inSingleStepMode;
     enum class SearchMode { Greedyh1=0, Greedyh2=1, Ah1=2, Ah2=3 };

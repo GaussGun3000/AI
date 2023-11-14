@@ -12,11 +12,17 @@ MainWindow::MainWindow(QWidget *parent)
     int maxDepth = 500000;
     gsh1 = new GreedySearch(&mutex, GreedySearch::HFunction::h1, startState, targetState);
     gsh2 = new GreedySearch(&mutex, GreedySearch::HFunction::h2, startState, targetState);
-   // astar = new
+    ash1 = new AStar(&mutex, GreedySearch::HFunction::h1, startState, targetState);
+    ash2 = new AStar(&mutex, GreedySearch::HFunction::h2, startState, targetState);
+
     connect(gsh1, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
     connect(gsh1, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
     connect(gsh2, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
     connect(gsh2, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
+    connect(ash1, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
+    connect(ash1, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
+    connect(ash2, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
+    connect(ash2, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -59,6 +65,14 @@ void MainWindow::startButtonClicked()
     {
         gsh2->start();
     }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah1)
+    {
+        ash1->start();
+    }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah2)
+    {
+        ash2->start();
+    }
    
     update();
 }
@@ -94,6 +108,40 @@ void MainWindow::updateStatLabels(quint32 depth)
             if (gsh2->getStepCount() > 1)
             {
                 ui.parentStateLabel->setText(QString(gsh2->getParentLastNodeStateString()));
+            }
+            else
+            {
+                ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+            }
+        }
+    }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah1)
+    {
+        ui.timeComplexityLabel->setText(QString::number(ash1->getStepCount()));
+        ui.capacitiveComplexityLabel->setText(QString::number(ash1->getNodeCount()));
+        if (this->inSingleStepMode)
+        {
+            ui.lastStateLabel->setText(QString(ash1->getLastNodeStateString()));
+            if (ash1->getStepCount() > 1)
+            {
+                ui.parentStateLabel->setText(QString(ash1->getParentLastNodeStateString()));
+            }
+            else
+            {
+                ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+            }
+        }
+    }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah2)
+    {
+        ui.timeComplexityLabel->setText(QString::number(ash2->getStepCount()));
+        ui.capacitiveComplexityLabel->setText(QString::number(ash2->getNodeCount()));
+        if (this->inSingleStepMode)
+        {
+            ui.lastStateLabel->setText(QString(ash2->getLastNodeStateString()));
+            if (ash2->getStepCount() > 1)
+            {
+                ui.parentStateLabel->setText(QString(ash2->getParentLastNodeStateString()));
             }
             else
             {
@@ -142,11 +190,47 @@ void MainWindow::updateFinishedStatLabels()
             ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
         }  
     }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah1)
+    {
+        uint32_t resDepth = ash1->getResultingDepth();
+        if (resDepth == -1)
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
+        else
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
+        ui.depthLabel->setText(QString::number(ash1->getResultingDepth()));
+        ui.lastStateLabel->setText(QString(ash1->getLastNodeStateString()));
+        if (ash1->getStepCount() > 1)
+        {
+            ui.parentStateLabel->setText(QString(ash1->getParentLastNodeStateString()));
+        }
+        else
+        {
+            ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        }
+    }
+    else if (static_cast<SearchMode>(mode) == SearchMode::Ah2)
+    {
+        uint32_t resDepth = ash2->getResultingDepth();
+        if (resDepth == -1)
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
+        else
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
+        ui.depthLabel->setText(QString::number(ash2->getResultingDepth()));
+        ui.lastStateLabel->setText(QString(ash2->getLastNodeStateString()));
+        if (ash2->getStepCount() > 1)
+        {
+            ui.parentStateLabel->setText(QString(ash2->getParentLastNodeStateString()));
+        }
+        else
+        {
+            ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        }
+    }
     update();
     ui.stepButton->setDisabled(true);
     ui.completeButton->setDisabled(true);
     ui.startButton->setDisabled(false);
-    ui.typeComboBox->setDisabled(false);
+    ui.typeComboBox->setDisabled(false); 
     mutex.lock();
 }
 
