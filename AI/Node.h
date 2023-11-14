@@ -14,6 +14,7 @@ public:
 	QVector<int> getState() const;
 	uint32_t getDepth() const;
 	uint32_t getCost() const;
+	uint32_t getH() const;
 	QSharedPointer<Node> getParent() const;
 	Node::Action getAction() const;
 	QList<Node::Action> getAvailableActions() const;
@@ -21,6 +22,7 @@ public:
 	void setState(QVector<int> state);
 	void setDepth(uint32_t depth);
 	void setCost(uint32_t cost);
+	void setH(uint32_t h);
 	void setParent(QSharedPointer<Node> parent);
 	void setAction(Action action);
 	QString getStateString();
@@ -40,6 +42,7 @@ private:
 	Action action;
 	uint32_t cost;
 	uint32_t depth;
+	uint32_t h;
 	void applyAction(Action action);
 
 };

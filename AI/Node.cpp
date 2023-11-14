@@ -25,6 +25,11 @@ uint32_t Node::getCost() const
 	return cost;
 }
 
+uint32_t Node::getH() const
+{
+	return h;
+}
+
 QSharedPointer<Node> Node::getParent() const
 {
 	return parent;
@@ -88,6 +93,11 @@ void Node::setDepth(uint32_t depth)
 void Node::setCost(uint32_t cost)
 {
 	this->cost = cost;
+}
+
+void Node::setH(uint32_t h)
+{
+	this->h = h;
 }
 
 void Node::setParent(QSharedPointer<Node> parent)
