@@ -72,6 +72,9 @@ void GreedySearch::init()
     uniqueStates.insert(NodePtr(startNode));
     lastNode = startNode;
     resultingDepth = -1;
+    steps = 0;
+    nodeCount = 0;
+
 }
 
 void GreedySearch::cleanup()
