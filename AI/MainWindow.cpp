@@ -152,8 +152,10 @@ void MainWindow::updateFinishedStatLabels()
 
 void MainWindow::modeChanged()
 {
-    auto mode = ui.typeComboBox->currentIndex();
+    ui.depthLabel->setText("0");
     ui.parentStateLabel->clear();
     ui.lastStateLabel->clear();
-    
+    ui.timeComplexityLabel->setText("0");
+    ui.capacitiveComplexityLabel->setText("0");
+    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск не начат"));
 }
