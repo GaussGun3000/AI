@@ -75,7 +75,6 @@ void GreedySearch::init()
     currentDepth = 0;
     steps = 0;
     nodeCount = 0;
-
 }
 
 void GreedySearch::cleanup()

@@ -43,10 +43,10 @@ protected:
     HFunction heuristic;
     QVector<int> startState;
     QVector<int> targetState;
-    qint32 resultingDepth;
-    qint32 steps;
-    qint32 currentDepth;
-    qint32 nodeCount;
+    qint32 resultingDepth = -1;
+    qint32 steps = 0;
+    qint32 currentDepth = 0;
+    qint32 nodeCount = 0;
     QMap<QString, int> h2Cost = {
         {"01", 1}, {"02", 2}, {"03", 1}, {"04", 2}, {"05", 3}, {"06", 2}, {"07", 3}, {"08", 4},
         {"12", 1}, {"13", 2}, {"14", 1}, {"15", 2}, {"16", 3}, {"17", 2}, {"18", 3},
