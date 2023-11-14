@@ -21,6 +21,7 @@ class GreedySearch : public QThread {
 public:
     enum class HFunction { h1 = 0, h2 = 1 };
     GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int>& startState, const QVector<int>& targetState);
+    GreedySearch::GreedySearch();
     int32_t getResultingDepth();
     quint32 getNodeCount();
     quint32 getStepCount();
