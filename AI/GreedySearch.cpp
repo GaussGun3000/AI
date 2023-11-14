@@ -72,6 +72,7 @@ void GreedySearch::init()
     uniqueStates.insert(NodePtr(startNode));
     lastNode = startNode;
     resultingDepth = -1;
+    currentDepth = 0;
     steps = 0;
     nodeCount = 0;
 
@@ -90,6 +91,8 @@ void GreedySearch::iteration()
     QSharedPointer<Node> currentNode = priorityQueue.top();
     priorityQueue.pop();
     lastNode = currentNode;
+    if (currentNode->getDepth() > currentDepth)
+        currentDepth = currentNode->getDepth();
     // Generate and process children nodes
     QList<Node::Action> actions = currentNode->getAvailableActions();
     for (Node::Action action : actions) {
