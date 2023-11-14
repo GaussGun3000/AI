@@ -97,6 +97,7 @@ void GreedySearch::iteration()
         if (!uniqueStates.contains(wrapper)) {
             priorityQueue.push(childNode);
             uniqueStates.insert(wrapper);
+            nodeCount++;
         }
     }
 }
