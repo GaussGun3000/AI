@@ -21,10 +21,14 @@ class GreedySearch : public QThread {
 public:
     enum class HFunction { h1 = 0, h2 = 1 };
     GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int>& startState, const QVector<int>& targetState);
+    int32_t getResultingDepth();
+    quint32 getNodeCount();
+    quint32 getStepCount();
+    QString getLastNodeStateString() const;
+    QString getParentLastNodeStateString() const;
 
 signals:
-    void targetFound(QSharedPointer<Node> targetNode); 
-    void searchFailed();
+    void updateStats(const quint32 depth);
 
 protected:
     void run() override;
@@ -36,12 +40,15 @@ private:
         }
     };
     std::priority_queue<QSharedPointer<Node>, QVector<QSharedPointer<Node>>, NodeComparator> priorityQueue ;
-    QMutex* mutex;
+    QMutex* nextStepPermission;
     HFunction heuristic;
     int h(const QSharedPointer<Node>& node);
     QVector<int> startState;
     QVector<int> targetState;
-
+    qint32 resultingDepth;
+    qint32 steps;
+    qint32 currentDepth;
+    qint32 nodeCount;
     QMap<QString, int> h2Cost = {
         {"01", 1}, {"02", 2}, {"03", 1}, {"04", 2}, {"05", 3}, {"06", 2}, {"07", 3}, {"08", 4},
         {"12", 1}, {"13", 2}, {"14", 1}, {"15", 2}, {"16", 3}, {"17", 2}, {"18", 3},
@@ -53,7 +60,9 @@ private:
         {"78", 1}
     };
     QSet<NodePtr> uniqueStates;
+    QSharedPointer<Node> lastNode;
     void init();
-
+    void cleanup();
+    void iteration();
 
 };

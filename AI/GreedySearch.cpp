@@ -29,16 +29,14 @@ inline bool operator==(const NodePtr& left, const NodePtr& right)
 }
 
 
-GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic,
-    const QVector<int>& startState,
-    const QVector<int>& targetState)
-    : mutex(mutex), heuristic(heuristic),
+GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int>& startState, const QVector<int>& targetState)
+    : nextStepPermission(mutex), heuristic(heuristic),
     startState(startState), targetState(targetState) {
     // Constructor implementation
     // You may initialize other members if necessary
 }
 
-int GreedySearch::h(const QSharedPointer<Node> node) {
+int GreedySearch::h(const QSharedPointer<Node>& node) {
     QVector<int> state = node->getState();
     int count = 0;
     if (this->heuristic == HFunction::h1)
@@ -72,8 +70,73 @@ void GreedySearch::init()
     h(startNode);
     priorityQueue.push(startNode);
     uniqueStates.insert(NodePtr(startNode));
+    lastNode = startNode;
+    resultingDepth = -1;
 }
 
-void  GreedySearch::run() {
+void GreedySearch::cleanup()
+{
+}
 
+void GreedySearch::iteration()
+{
+    QSharedPointer<Node> currentNode = priorityQueue.top();
+    priorityQueue.pop();
+    lastNode = currentNode;
+    // Generate and process children nodes
+    QList<Node::Action> actions = currentNode->getAvailableActions();
+    for (Node::Action action : actions) {
+        QSharedPointer<Node> childNode(new Node(currentNode, action));
+        h(childNode);
+
+        if (childNode->getState() == targetState) {
+            resultingDepth = childNode->getDepth();
+        }
+
+        NodePtr wrapper(childNode);
+        if (!uniqueStates.contains(wrapper)) {
+            priorityQueue.push(childNode);
+            uniqueStates.insert(wrapper);
+        }
+    }
+}
+
+int32_t GreedySearch::getResultingDepth()
+{
+    return resultingDepth;
+}
+
+quint32 GreedySearch::getNodeCount()
+{
+    return nodeCount;
+}
+
+quint32 GreedySearch::getStepCount()
+{
+    return steps;
+}
+
+QString GreedySearch::getLastNodeStateString() const
+{
+    return this->lastNode->getStateString();
+}
+
+QString GreedySearch::getParentLastNodeStateString() const
+{
+    return this->lastNode->getParent()->getStateString();
+}
+
+void  GreedySearch::run() 
+{
+    init();
+    nextStepPermission->lock();
+    nextStepPermission->unlock();
+    while (!priorityQueue.empty()) {
+        emit updateStats(currentDepth);
+        iteration();
+        steps++;
+        nextStepPermission->lock();
+        nextStepPermission->unlock();
+    }
+    cleanup();
 }
