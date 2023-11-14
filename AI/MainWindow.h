@@ -18,7 +18,7 @@ private:
     DFS* dfs;
     QMutex mutex;
     bool inSingleStepMode;
-    enum class SearchMode {BiDS=0, DFS=1};
+    enum class SearchMode {Greedyh1=0, Greedyh2=1, Ah1=2, Ah2=3};
 
 public slots:
     void stepButtonClicked();

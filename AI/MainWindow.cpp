@@ -5,17 +5,15 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
+    setStyleSheet("* { font-size: 16px; }");
     mutex.lock();
     QVector<int> startState = { 6, 0, 8, 5, 2, 1, 4, 3, 7 };
     QVector<int> targetState = { 1, 2, 3, 8, 0, 4, 7, 6, 5 };
     //QVector<int> targetState = { 6, 2, 8, 5, 3, 1, 4, 0, 7 };
     int maxDepth = 500000;
-    bds = new BiDirectionalSearch(&mutex, maxDepth, startState, targetState);
-    dfs = new DFS(&mutex, maxDepth, startState, targetState);
-    connect(bds, &BiDirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
-    connect(dfs, &DFS::updateStats, this, &MainWindow::updateStatLabels);
-    connect(bds, &BiDirectionalSearch::finished, this, &MainWindow::updateFinishedStatLabelsBDS);
-    connect(dfs, &DFS::finished, this, &MainWindow::updateFinishedStatLabelsDFS);
+
+    //connect(bds, &BiDirectionalSearch::updateStats, this, &MainWindow::updateStatLabels);
+    //connect(bds, &BiDirectionalSearch::finished, this, &MainWindow::updateFinishedStatLabelsBDS);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -49,13 +47,13 @@ void MainWindow::startButtonClicked()
     ui.completeButton->setDisabled(false);
     ui.typeComboBox->setDisabled(true);
     auto mode = ui.typeComboBox->currentIndex();
-    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
+    if (static_cast<SearchMode>(mode) == SearchMode::Greedyh1)
     {
-        bds->start();
+        
     }
     else
     {
-        dfs->start();
+        
     }
    
     update();
@@ -65,7 +63,7 @@ void MainWindow::updateStatLabels(quint32 depth)
 {
     ui.depthLabel->setText(QString::number(depth));
     auto mode = ui.typeComboBox->currentIndex();
-    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
+    if (static_cast<SearchMode>(mode) == SearchMode::Greedyh1)
     {
         ui.timeComplexityLabel->setText(QString::number(bds->getStepCount()));
         ui.capacitiveComplexityLabel->setText(QString::number(bds->getNodeCount()));
@@ -153,21 +151,7 @@ void MainWindow::updateFinishedStatLabelsDFS()
 void MainWindow::modeChanged()
 {
     auto mode = ui.typeComboBox->currentIndex();
-    ui.parentStartDirStateLabel->clear();
-    ui.startDirStateLabel->clear();
-    ui.parentTargetDirStateLabel->clear();
-    ui.targetDirStateLabel->clear();
-    if (static_cast<SearchMode>(mode) == SearchMode::BiDS)
-    {
-        ui.biDirectWidget->setVisible(true);
-        ui.targetDirLabel->setVisible(true);
-        ui.startDirLabel->setVisible(true);
-
-    }
-    else
-    {
-        ui.biDirectWidget->setVisible(false);
-        ui.targetDirLabel->setVisible(false);
-        ui.startDirLabel->setVisible(false);
-    }
+    ui.parentStateLabel->clear();
+    ui.lastStateLabel->clear();
+    
 }

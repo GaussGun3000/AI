@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>706</width>
-    <height>715</height>
+    <width>690</width>
+    <height>703</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,33 +30,6 @@
        </size>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="4" column="1">
-        <widget class="QLabel" name="searchStatusLabel">
-         <property name="text">
-          <string>Поиск не начат</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="depthLabel">
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label">
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Стоимость решения:</string>
-         </property>
-        </widget>
-       </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_2">
          <property name="maximumSize">
@@ -70,18 +43,11 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QComboBox" name="typeComboBox">
-         <item>
-          <property name="text">
-           <string>Двунаправленный в ширину</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Однонаправленный в глубину</string>
-          </property>
-         </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="depthLabel">
+         <property name="text">
+          <string>0</string>
+         </property>
         </widget>
        </item>
        <item row="0" column="0">
@@ -94,6 +60,56 @@
          </property>
          <property name="text">
           <string>Тип поиска</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="typeComboBox">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <item>
+          <property name="text">
+           <string>Жадный поиск (h1)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Жадный поиск (h2)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>A* поиск (h1)</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>A* поиск (h2)</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="searchStatusLabel">
+         <property name="text">
+          <string>Поиск не начат</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>50</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Стоимость решения:</string>
          </property>
         </widget>
        </item>
@@ -191,163 +207,55 @@
     <item>
      <widget class="QWidget" name="statesWidget" native="true">
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="1">
-        <widget class="QLabel" name="targetDirLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Обратное направление</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QWidget" name="oneDirectWidget" native="true">
-         <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="1">
-           <widget class="QLabel" name="label_6">
-            <property name="maximumSize">
-             <size>
-              <width>160</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Последнее состояние:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="startDirStateLabel">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Родительское состояние:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="parentStartDirStateLabel">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QWidget" name="biDirectWidget" native="true">
-         <layout class="QGridLayout" name="gridLayout_4">
-          <item row="1" column="1">
-           <widget class="QLabel" name="targetDirStateLabel">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_17">
-            <property name="maximumSize">
-             <size>
-              <width>160</width>
-              <height>16777215</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Последнее состояние:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="text">
-             <string>Родительское состояние:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLabel" name="parentTargetDirStateLabel">
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item row="0" column="0">
-        <widget class="QLabel" name="startDirLabel">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Родительское состояние:</string>
          </property>
-         <property name="minimumSize">
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="lastStateLabel">
+         <property name="maximumSize">
           <size>
-           <width>0</width>
-           <height>50</height>
+           <width>16777215</width>
+           <height>100</height>
           </size>
          </property>
          <property name="text">
-          <string>Прямое направление</string>
+          <string/>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="parentStateLabel">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="maximumSize">
+          <size>
+           <width>160</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>Последнее состояние:</string>
          </property>
         </widget>
        </item>
