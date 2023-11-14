@@ -79,6 +79,10 @@ void GreedySearch::init()
 
 void GreedySearch::cleanup()
 {
+    while (!priorityQueue.empty()) {
+        priorityQueue.pop();
+    }
+    uniqueStates.clear();
 }
 
 void GreedySearch::iteration()
