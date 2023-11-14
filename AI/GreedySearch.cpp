@@ -2,6 +2,33 @@
 #include <QSet>
 #include <algorithm>
 
+uint statehash(const QVector<int>& vector)
+{
+    uint hashValue = 0;
+    uint base = 1;
+    for (int i = 0; i < vector.size(); ++i) {
+        hashValue += vector[i] * base;
+        base *= 9;
+    }
+    return hashValue;
+}
+
+inline uint qHash(const Node& node)
+{
+    return statehash(node.getState());
+}
+
+inline uint qHash(const NodePtr& wrapper)
+{
+    return statehash(wrapper.node->getState());
+}
+
+inline bool operator==(const NodePtr& left, const NodePtr& right)
+{
+    return left.node->getState() == right.node->getState();
+}
+
+
 GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic,
     const QVector<int>& startState,
     const QVector<int>& targetState)
@@ -21,42 +48,14 @@ int  GreedySearch::h(const QVector<int>& state) {
     return count;
 }
 
+void GreedySearch::init()
+{
+    QSharedPointer<Node> startNode(new Node(startState, nullptr, Node::Action::NoAction, 0, 0));
+    h(startNode);
+    priorityQueue.push(startNode);
+    uniqueStates.insert(NodePtr(startNode));
+}
+
 void  GreedySearch::run() {
-    QSharedPointer<Node> root = QSharedPointer<Node>::create(startState, nullptr, Node::Action::NoAction, 0, 0);
-    QSet<QVector<int>> visited;
-    QList<QSharedPointer<Node>> frontier;
-    frontier.append(root);
 
-    while (!frontier.isEmpty()) {
-        std::sort(frontier.begin(), frontier.end(), [this](const QSharedPointer<Node>& nodeA, const QSharedPointer<Node>& nodeB) {
-            return h(nodeA->getState()) < h1(nodeB->getState());
-            });
-
-        QSharedPointer<Node> currentNode = frontier.takeFirst();
-        QVector<int> currentState = currentNode->getState();
-
-        if (visited.contains(currentState)) {
-            continue; // Skip already visited states
-        }
-
-        if (currentState == targetState) {
-            emit targetFound(currentNode);
-            return;
-        }
-
-        visited.insert(currentState);
-
-        QList<Node::Action> actions = currentNode->getAvailableActions();
-        for (Node::Action action : actions) {
-            QVector<int> newState = currentState;
-            // Apply action to newState...
-            // Make sure to implement the action application logic according to your puzzle rules
-
-            if (!visited.contains(newState)) {
-                QSharedPointer<Node> newNode = QSharedPointer<Node>::create(newState, currentNode.data(), action, currentNode->getDepth() + 1, currentNode->getCost() + 1);
-                frontier.append(newNode);
-            }
-        }
-    }
-    emit searchFailed(); // No solution found
 }

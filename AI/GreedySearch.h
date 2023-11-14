@@ -5,6 +5,7 @@
 #include <qset.h>
 #include "Node.h" 
 #include <qmutex.h>
+#include <queue>
 
 
 class NodePtr {
@@ -29,9 +30,19 @@ protected:
     void run() override;
 
 private:
+    struct NodeComparator {
+        bool operator()(const QSharedPointer<Node>& lhs, const QSharedPointer<Node>& rhs) const {
+            return lhs->getH() > rhs->getH();
+        }
+    };
+    std::priority_queue<QSharedPointer<Node>, QVector<QSharedPointer<Node>>, NodeComparator> priorityQueue ;
     QMutex* mutex;
     HFunction heuristic;
-    int h(const QVector<int>& state);
+    int h(const QSharedPointer<Node>& node);
     QVector<int> startState;
     QVector<int> targetState;
+    QSet<NodePtr> uniqueStates;
+    void init();
+
+
 };
