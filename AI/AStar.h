@@ -1,5 +1,8 @@
 #pragma once
-class AStar
+#include "GreedySearch.h"
+
+class AStar : public GreedySearch
 {
+	int h(const QSharedPointer<Node>& node) override;
 };
 

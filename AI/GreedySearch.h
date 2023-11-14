@@ -32,17 +32,15 @@ signals:
 
 protected:
     void run() override;
-
-private:
+    virtual int h(const QSharedPointer<Node>& node);
     struct NodeComparator {
         bool operator()(const QSharedPointer<Node>& lhs, const QSharedPointer<Node>& rhs) const {
             return lhs->getH() > rhs->getH();
         }
     };
-    std::priority_queue<QSharedPointer<Node>, QVector<QSharedPointer<Node>>, NodeComparator> priorityQueue ;
+    std::priority_queue<QSharedPointer<Node>, QVector<QSharedPointer<Node>>, NodeComparator> priorityQueue;
     QMutex* nextStepPermission;
     HFunction heuristic;
-    int h(const QSharedPointer<Node>& node);
     QVector<int> startState;
     QVector<int> targetState;
     qint32 resultingDepth;
@@ -64,5 +62,8 @@ private:
     void init();
     void cleanup();
     void iteration();
+
+private:
+
 
 };
