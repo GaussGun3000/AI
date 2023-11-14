@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
    // astar = new
     connect(gsh1, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
     connect(gsh1, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
+    connect(gsh2, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
+    connect(gsh2, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -37,6 +39,7 @@ void MainWindow::completeButtonClicked()
     this->inSingleStepMode = false;
     ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
     ui.stepButton->setDisabled(true);
+    ui.completeButton->setDisabled(true);
     mutex.unlock();
 }
 
@@ -64,7 +67,7 @@ void MainWindow::updateStatLabels(quint32 depth)
 {
     ui.depthLabel->setText(QString::number(depth));
     auto mode = ui.typeComboBox->currentIndex();
-    if (static_cast<SearchMode>(mode) == SearchMode::Greedyh1 || static_cast<SearchMode>(mode) == SearchMode::Greedyh2)
+    if (static_cast<SearchMode>(mode) == SearchMode::Greedyh1)
     {
         ui.timeComplexityLabel->setText(QString::number(gsh1->getStepCount()));
         ui.capacitiveComplexityLabel->setText(QString::number(gsh1->getNodeCount()));
@@ -81,40 +84,63 @@ void MainWindow::updateStatLabels(quint32 depth)
             }
         }
     }
-    /*
-    else
+    else if (static_cast<SearchMode>(mode) == SearchMode::Greedyh2)
     {
-        ui.timeComplexityLabel->setText(QString::number(dfs->getStepCount()));
-        ui.capacitiveComplexityLabel->setText(QString::number(dfs->getNodeCount()));
+        ui.timeComplexityLabel->setText(QString::number(gsh2->getStepCount()));
+        ui.capacitiveComplexityLabel->setText(QString::number(gsh2->getNodeCount()));
         if (this->inSingleStepMode)
         {
-            ui.startDirStateLabel->setText(QString(dfs->getLastNodeStateString()));
-            if(dfs->getStepCount() > 1)
-                ui.parentStartDirStateLabel->setText(QString(dfs->getParentLastNodeStateString()));
+            ui.lastStateLabel->setText(QString(gsh2->getLastNodeStateString()));
+            if (gsh2->getStepCount() > 1)
+            {
+                ui.parentStateLabel->setText(QString(gsh2->getParentLastNodeStateString()));
+            }
             else
-                ui.parentStartDirStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+            {
+                ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+            }
         }
-            
     }
-    */
 }
 
 void MainWindow::updateFinishedStatLabels()
 {
-    uint32_t resDepth = gsh1->getResultingDepth();
-    if (resDepth == -1)
-        ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
-    else
-        ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
-    ui.depthLabel->setText(QString::number(gsh1->getResultingDepth()));
-    ui.lastStateLabel->setText(QString(gsh1->getLastNodeStateString()));
-    if (gsh1->getStepCount() > 1)
+    auto mode = ui.typeComboBox->currentIndex();
+    if (static_cast<SearchMode>(mode) == SearchMode::Greedyh1)
     {
-        ui.parentStateLabel->setText(QString(gsh1->getParentLastNodeStateString()));
+        uint32_t resDepth = gsh1->getResultingDepth();
+        if (resDepth == -1)
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
+        else
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
+        ui.depthLabel->setText(QString::number(gsh1->getResultingDepth()));
+        ui.lastStateLabel->setText(QString(gsh1->getLastNodeStateString()));
+        if (gsh1->getStepCount() > 1)
+        {
+            ui.parentStateLabel->setText(QString(gsh1->getParentLastNodeStateString()));
+        }
+        else
+        {
+            ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        }
     }
-    else
+    else if (static_cast<SearchMode>(mode) == SearchMode::Greedyh2)
     {
-        ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        uint32_t resDepth = gsh2->getResultingDepth();
+        if (resDepth == -1)
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение не найдено"));
+        else
+            ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск завершен. Решение найдено"));
+        ui.depthLabel->setText(QString::number(gsh2->getResultingDepth()));
+        ui.lastStateLabel->setText(QString(gsh2->getLastNodeStateString()));
+        if (gsh2->getStepCount() > 1)
+        {
+            ui.parentStateLabel->setText(QString(gsh2->getParentLastNodeStateString()));
+        }
+        else
+        {
+            ui.parentStateLabel->setText(QString::fromLocal8Bit("Это начальный узел"));
+        }  
     }
     update();
     ui.stepButton->setDisabled(true);
@@ -126,8 +152,10 @@ void MainWindow::updateFinishedStatLabels()
 
 void MainWindow::modeChanged()
 {
-    auto mode = ui.typeComboBox->currentIndex();
+    ui.depthLabel->setText("0");
     ui.parentStateLabel->clear();
     ui.lastStateLabel->clear();
-    
+    ui.timeComplexityLabel->setText("0");
+    ui.capacitiveComplexityLabel->setText("0");
+    ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск не начат"));
 }
