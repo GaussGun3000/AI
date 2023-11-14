@@ -100,6 +100,7 @@ void GreedySearch::iteration()
         h(childNode);
 
         if (childNode->getState() == targetState) {
+            lastNode = childNode;
             resultingDepth = childNode->getDepth();
         }
 
