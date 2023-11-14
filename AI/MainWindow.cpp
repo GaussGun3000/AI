@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
    // astar = new
     connect(gsh1, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
     connect(gsh1, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
+    connect(gsh2, &GreedySearch::updateStats, this, &MainWindow::updateStatLabels);
+    connect(gsh2, &GreedySearch::finished, this, &MainWindow::updateFinishedStatLabels);
 
     ui.setupUi(this);
     ui.stepButton->setDisabled(true);
@@ -37,6 +39,7 @@ void MainWindow::completeButtonClicked()
     this->inSingleStepMode = false;
     ui.searchStatusLabel->setText(QString::fromLocal8Bit("Поиск в процессе"));
     ui.stepButton->setDisabled(true);
+    ui.completeButton->setDisabled(true);
     mutex.unlock();
 }
 
