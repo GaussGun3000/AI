@@ -4,6 +4,7 @@
 #include <qqueue.h>
 #include <qset.h>
 #include "Node.h" 
+#include <qmutex.h>
 
 
 class NodePtr {
@@ -18,7 +19,7 @@ class GreedySearch : public QThread {
 
 public:
     enum class HFunction { h1 = 0, h2 = 1 };
-    GreedySearch(const QVector<int>& startState, const QVector<int>& goalState, QObject* parent = nullptr);
+    GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int>& startState, const QVector<int>& targetState);
 
 signals:
     void targetFound(QSharedPointer<Node> targetNode); 
@@ -28,6 +29,8 @@ protected:
     void run() override;
 
 private:
+    QMutex* mutex;
+    HFunction heuristic;
     int h(const QVector<int>& state);
     QVector<int> startState;
     QVector<int> targetState;

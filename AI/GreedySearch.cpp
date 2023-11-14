@@ -2,8 +2,14 @@
 #include <QSet>
 #include <algorithm>
 
- GreedySearch:: GreedySearch(const QVector<int>& startState, const QVector<int>& goalState, QObject* parent)
-    : QThread(parent), startState(startState), targetState(goalState) {}
+GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic,
+    const QVector<int>& startState,
+    const QVector<int>& targetState)
+    : mutex(mutex), heuristic(heuristic),
+    startState(startState), targetState(targetState) {
+    // Constructor implementation
+    // You may initialize other members if necessary
+}
 
 int  GreedySearch::h(const QVector<int>& state) {
     int count = 0;
