@@ -2,16 +2,41 @@
 #include <QSet>
 #include <algorithm>
 
-GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic,
-    const QVector<int>& startState,
-    const QVector<int>& targetState)
-    : mutex(mutex), heuristic(heuristic),
+uint statehash(const QVector<int>& vector)
+{
+    uint hashValue = 0;
+    uint base = 1;
+    for (int i = 0; i < vector.size(); ++i) {
+        hashValue += vector[i] * base;
+        base *= 9;
+    }
+    return hashValue;
+}
+
+inline uint qHash(const Node& node)
+{
+    return statehash(node.getState());
+}
+
+inline uint qHash(const NodePtr& wrapper)
+{
+    return statehash(wrapper.node->getState());
+}
+
+inline bool operator==(const NodePtr& left, const NodePtr& right)
+{
+    return left.node->getState() == right.node->getState();
+}
+
+
+GreedySearch::GreedySearch(QMutex* mutex, HFunction heuristic, const QVector<int>& startState, const QVector<int>& targetState)
+    : nextStepPermission(mutex), heuristic(heuristic),
     startState(startState), targetState(targetState) {
     // Constructor implementation
     // You may initialize other members if necessary
 }
 
-int GreedySearch::h(const QSharedPointer<Node> node) {
+int GreedySearch::h(const QSharedPointer<Node>& node) {
     QVector<int> state = node->getState();
     int count = 0;
     if (this->heuristic == HFunction::h1)
@@ -39,42 +64,80 @@ int GreedySearch::h(const QSharedPointer<Node> node) {
     return count;
 }
 
-void  GreedySearch::run() {
-    QSharedPointer<Node> root = QSharedPointer<Node>::create(startState, nullptr, Node::Action::NoAction, 0, 0);
-    QSet<QVector<int>> visited;
-    QList<QSharedPointer<Node>> frontier;
-    frontier.append(root);
+void GreedySearch::init()
+{
+    QSharedPointer<Node> startNode(new Node(startState, nullptr, Node::Action::NoAction, 0, 0));
+    h(startNode);
+    priorityQueue.push(startNode);
+    uniqueStates.insert(NodePtr(startNode));
+    lastNode = startNode;
+    resultingDepth = -1;
+}
 
-    while (!frontier.isEmpty()) {
-        std::sort(frontier.begin(), frontier.end(), [this](const QSharedPointer<Node>& nodeA, const QSharedPointer<Node>& nodeB) {
-            //return h(nodeA->getState()) < h1(nodeB->getState());
-            });
+void GreedySearch::cleanup()
+{
+}
 
-        QSharedPointer<Node> currentNode = frontier.takeFirst();
-        QVector<int> currentState = currentNode->getState();
+void GreedySearch::iteration()
+{
+    QSharedPointer<Node> currentNode = priorityQueue.top();
+    priorityQueue.pop();
+    lastNode = currentNode;
+    // Generate and process children nodes
+    QList<Node::Action> actions = currentNode->getAvailableActions();
+    for (Node::Action action : actions) {
+        QSharedPointer<Node> childNode(new Node(currentNode, action));
+        h(childNode);
 
-        if (visited.contains(currentState)) {
-            continue; // Skip already visited states
+        if (childNode->getState() == targetState) {
+            resultingDepth = childNode->getDepth();
         }
 
-        if (currentState == targetState) {
-            emit targetFound(currentNode);
-            return;
-        }
-
-        visited.insert(currentState);
-
-        QList<Node::Action> actions = currentNode->getAvailableActions();
-        for (Node::Action action : actions) {
-            QVector<int> newState = currentState;
-            // Apply action to newState...
-            // Make sure to implement the action application logic according to your puzzle rules
-
-            if (!visited.contains(newState)) {
-                QSharedPointer<Node> newNode = QSharedPointer<Node>::create(newState, currentNode.data(), action, currentNode->getDepth() + 1, currentNode->getCost() + 1);
-                frontier.append(newNode);
-            }
+        NodePtr wrapper(childNode);
+        if (!uniqueStates.contains(wrapper)) {
+            priorityQueue.push(childNode);
+            uniqueStates.insert(wrapper);
+            nodeCount++;
         }
     }
-    emit searchFailed(); // No solution found
+}
+
+int32_t GreedySearch::getResultingDepth()
+{
+    return resultingDepth;
+}
+
+quint32 GreedySearch::getNodeCount()
+{
+    return nodeCount;
+}
+
+quint32 GreedySearch::getStepCount()
+{
+    return steps;
+}
+
+QString GreedySearch::getLastNodeStateString() const
+{
+    return this->lastNode->getStateString();
+}
+
+QString GreedySearch::getParentLastNodeStateString() const
+{
+    return this->lastNode->getParent()->getStateString();
+}
+
+void  GreedySearch::run() 
+{
+    init();
+    nextStepPermission->lock();
+    nextStepPermission->unlock();
+    while (!priorityQueue.empty()) {
+        emit updateStats(currentDepth);
+        iteration();
+        steps++;
+        nextStepPermission->lock();
+        nextStepPermission->unlock();
+    }
+    cleanup();
 }
