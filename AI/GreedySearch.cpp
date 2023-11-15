@@ -55,13 +55,15 @@ int GreedySearch::h(const QSharedPointer<Node>& node) {
     else if (this->heuristic == HFunction::h2)
     {
         for (int i = 0; i < 9; ++i) {
-            int targetIndex = targetState.indexOf(state[i]);
-            if (i - targetIndex != 0) // if == 0: current number already is on the right position
-            {
-                if (h2Cost.contains(QString::number(i) + QString::number(targetIndex)))
-                    count = count + h2Cost.value(QString::number(i) + QString::number(targetIndex));
-                else if (h2Cost.contains(QString::number(targetIndex) + QString::number(i)))
-                    count = count + h2Cost.value(QString::number(targetIndex) + QString::number(i));
+            if (state[i] != 0) {
+                int targetIndex = targetState.indexOf(state[i]);
+                if (i - targetIndex != 0) // if == 0: current number already is on the right position
+                {
+                    if (h2Cost.contains(QString::number(i) + QString::number(targetIndex)))
+                        count = count + h2Cost.value(QString::number(i) + QString::number(targetIndex));
+                    else
+                        count = count + h2Cost.value(QString::number(targetIndex) + QString::number(i));
+                }
             }
         }
     }
